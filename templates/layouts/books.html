@@ -1,0 +1,157 @@
+<html lang="zh">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="csrf_token" content="{{ csrf_token }}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css"
+          integrity="sha512-ELV+xyi8IhEApPS/pSj66+Jiw+sOT1Mqkzlh8ExXihe4zfqbWkxPRi8wptXIO9g73FSlhmquFlUOuMSoXz5IRw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+    .codehilite pre {
+        padding: 10px 5px;
+    }
+    .rating {
+        color: orange;
+    }
+
+    .tag a, .category a {
+        padding: 1px 3px 3px 3px;
+        margin-bottom: 8px;
+        font-size: 12px;
+        display: block;
+        background: #eee;
+        color: #555;
+        border-radius: 3px;
+        text-decoration: none;
+        border: 1px dashed #cccccc;
+    }
+    .tag a:hover, .category a:hover {
+        background-color: #e5e5e5;
+    }
+    .tag a.active, .category a.active {
+        background: #57A957;
+        border: 1px solid #4c964d;
+        color: #FFF;
+    }
+    .tag a span, .category a.active {
+        vertical-align: super;
+        font-size: xx-small;
+        color: #909090;
+    }
+
+    .date-filter {
+        line-height: 25px;
+    }
+
+     .date-filter a {
+         text-decoration: none;
+     }
+
+    .plan {
+        padding: 1px 2px;
+        font-family: Kai, serif;
+    }
+    .all {
+    }
+    .no-plan, .no_plan {
+        color: bisque;
+        background-color: gray;
+    }
+    .interested {
+        background-color: #E6E6E6
+    }
+    .to-be-considered, .to_be_considered {
+        background-color: #CCCCCC
+    }
+    .planned {
+        color: bisque;
+        background-color: #CC6600;
+    }
+    .reading {
+        background-color: #99FF33;
+    }
+    .paused {
+        background-color: #FFCC99;
+    }
+    .abandoned {
+        background-color: #E1D5E7;
+    }
+    .finished {
+        color: bisque;
+        background-color: #009900;
+    }
+    .pending-review, .pending_review {
+        background-color: #66FF66;
+    }
+    .reviewing {
+        background-color: #99FF99;
+    }
+    .review_paused {
+        background-color: #FF9999;
+    }
+    .reviewed {
+        background-color: #CCFFCC;
+    }
+    .collected {
+        background-color: #FFCCFF;
+    }
+    .archived {
+        background-color: #E5CCFF;
+    }
+    </style>
+    {% block head %}
+    {% endblock %}
+    <title>{% block title %}SuperNotes{% endblock %}</title>
+</head>
+<body>
+{% block header %}
+<nav class="navbar navbar-expand-md navbar-default bg-secondary">
+    <div class="container">
+        <a class="navbar-brand" href="#">图书</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navContent">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" href="{% url 'books:category_tree' %}">图书类目</a></li>
+                <li class="nav-item"><a class="nav-link" href="/admin">管理后台</a></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0);">关于</a>
+                </li>
+            </ul>
+            <form class="d-flex" action="#">
+                <input class="form-control me-2" type="search" name="q" placeholder="" aria-label="Search">
+                <button class="btn btn-light text-nowrap" type="submit">搜索</button>
+            </form>
+        </div>
+    </div>
+</nav>
+{% endblock %}
+
+<main class="container">
+    {% block content %}
+    {% endblock %}
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
+        integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"
+        integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0="
+        crossorigin="anonymous"></script>
+{% block script %}
+{% endblock %}
+
+</body>
+</html>
+
+
+
+

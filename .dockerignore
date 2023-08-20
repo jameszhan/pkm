@@ -10,6 +10,7 @@ logs/
 log/
 *.log
 
+data/
 static/
 media/
 
