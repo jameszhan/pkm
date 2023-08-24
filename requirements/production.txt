@@ -1,3 +1,8 @@
 django==4.1.7
-django-countries
 python-dotenv
+mysqlclient
+djangorestframework
+django-countries
+django-reversion
+django-taggit
+requests

@@ -4,6 +4,7 @@ from . import views
 app_name = 'books'
 
 urlpatterns = [
+    path('publishers/', views.publisher_list, name="publishers"),
     path('categories/', views.category_tree, name="category_tree"),
     path('api/categories', views.categories_api, name='api_categories'),
     path('api/categories/create', views.create_category_api, name='api_categories_create'),

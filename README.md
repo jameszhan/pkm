@@ -1,99 +1,21 @@
-+----+--------------------+-----------+----------------------------------+---------------+-
-| id | name               | parent_id | slug                             | created_by_id | 
-+----+--------------------+-----------+----------------------------------+---------------+
-|  2 | 心理学             |      NULL | psychology                       |             1 |
-|  3 | 自然科学           |      NULL | natural-science                  |             1 | 
-|  4 | 政治学             |      NULL | political-science                |             1 |
-|  5 | 金融学             |      NULL | finance                          |             1 |
-|  6 | 科技               |      NULL | technology                       |             1 |
-|  7 | 经济学             |      NULL | economics                        |             1 |
-|  8 | 互联网             |      NULL | internet                         |             1 |
-|  9 | 哲学               |      NULL | philosophy                       |             1 |
-| 10 | 管理学             |      NULL | management                       |             1 |
-| 11 | 文学               |      NULL | literature                       |             1 |
-| 12 | 艺术               |      NULL | art                              |             1 |
-| 13 | 历史               |      NULL | history                          |             1 |
-| 14 | 社会学             |      NULL | sociology                        |             1 |
-| 15 | 法律               |      NULL | law                              |             1 |
-| 16 | 医学与健康         |      NULL | medicine-and-health              |             1 | 
-| 17 | 家庭亲子           |      NULL | family-and-child                 |             1 | 
-| 18 | 思维方式           |         1 | way-of-thinking                  |             1 | 
-| 19 | 时间管理           |         1 | time-management                  |             1 | 
-| 20 | 情绪管理           |         1 | emotion-management               |             1 | 
-| 21 | 压力管理           |         1 | stress-management                |             1 | 
-| 22 | 精力管理           |         1 | energy-management                |             1 | 
-| 23 | 习惯养成           |         1 | habit-formation                  |             1 | 
-| 24 | 说话沟通           |         1 | speaking-and-communication       |             1 | 
-| 25 | 职场写作           |         1 | workplace-writing                |             1 | 
-| 26 | 学习方法           |         1 | learning-methods                 |             1 | 
-| 27 | 亲密关系           |        17 | intimate-relationship            |             1 | 
-| 28 | 人工智能           |        61 | artificial-intelligence          |             1 | 
-| 29 | 大数据             |        61 | big-data                         |             1 |
-| 30 | 编程开发           |        61 | programming-and-development      |             1 | 
-| 31 | 计算机理论         |        61 | computer-theory                  |             1 | 
-| 32 | 操作系统           |        61 | operating-system                 |             1 | 
-| 33 | 网络通讯           |        61 | network-communication            |             1 | 
-| 34 | 行业软件           |        61 | industry-software                |             1 | 
-| 35 | 软件工程           |        61 | software-engineering             |             1 | 
-| 36 | 硬件开发           |        61 | hardware-development             |             1 | 
-| 37 | 科技公司           |         6 | tech-company                     |             1 | 
-| 38 | 区块链             |        61 | blockchain                       |             1 |
-| 39 | 科学家             |         6 | scientist                        |             1 |
-| 40 | 文明史             |        13 | civilization-history             |             1 |
-| 41 | 世界史             |        13 | world-history                    |             1 |
-| 42 | 人类史             |        13 | human-history                    |             1 |
-| 43 | 艺术史             |        13 | art-history                      |             1 |
-| 44 | 战争史             |        13 | war-history                      |             1 |
-| 45 | 中国史             |        13 | chinese-history                  |             1 |
-| 46 | 科技史             |        13 | technology-history               |             1 |
-| 47 | 政治史             |        13 | political-history                |             1 |
-| 48 | 政治哲学           |         4 | political-philosophy             |             1 | 
-| 49 | 政治思想           |         4 | political-thought                |             1 | 
-| 50 | 数学               |      NULL | mathematics                      |             1 
-| 51 | 物理学             |         3 | physics                          |             1 |
-| 52 | 化学               |         3 | chemistry                        |             1 
-| 53 | 生物学             |         3 | biology                          |             1 |
-| 54 | 博物学             |         3 | natural-history                  |             1 |
-| 55 | 亲子关系           |        17 | parent-child-relationship        |             1 | 
-| 56 | 儿童健康           |        17 | child-health                     |             1 | 
-| 57 | K12教育            |        17 | k12-education                    |             1 
-| 58 | 应用数学           |        50 | applied-mathematics              |             1 | 
-| 59 | 统计学             |        14 | statistics                       |             1 |
-| 60 | 科学思维           |         9 | scientific-thinking              |             1 | 
-| 61 | 计算机科学         |      NULL | computer-science                 |             1 |
-| 62 | 数据库             |        61 | database                         |             1 |  
-| 63 | 科学计算           |        61 | scientific-computing             |             1 | 
-| 64 | 信息安全           |        61 | information-security             |             1 | 
-| 65 | 世界名著           |        11 | world-classics                   |             1 | 
-| 66 | 小说               |        11 | novel                            |             1 | 
-| 67 | 文学理论           |        11 | literary-theory                  |             1 | 
-| 68 | 纪实文学           |        11 | creative-nonfiction              |             1 | 
-| 69 | 传记               |        68 | biography                        |             1 | 
-| 70 | 回忆录             |        68 | memoir                           |             1 |  
-| 71 | 古典诗歌           |        11 | classical-poetry                 |             1 | 
-| 72 | 戏剧文学           |        11 | dramatic-literature              |             1 |  
-| 73 | 语言学             |      NULL | Linguistics                      |             1 |  
-| 74 | 古汉语             |        73 | classical-chinese                |             1 |  
-| 75 | 形而上学           |         9 | metaphysics                      |             1 | 
-| 76 | 逻辑学             |         9 | logic                            |             1 |  
-| 77 | 伦理学             |         9 | ethics                           |             1 |  
-| 78 | 知识论             |         9 | epistemology                     |             1 |  
-| 79 | 美学               |         9 | aesthetics                       |             1 | 
-| 80 | 地球科学           |         3 | earth-science                    |             1 | 
-| 81 | 天文学             |         3 | astronomy                        |             1 |  
-| 82 | 纯数学             |        50 | pure-mathematics                 |             1 |  
-| 83 | 商业               |      NULL | business                         |             1 | 
-| 84 | 市场营销           |        83 | marketing                        |             1 | 
-| 85 | 财务               |        83 | accounting                       |             1 | 
-| 86 | 电子商务           |        83 | e-commerce                       |             1 | 
-| 87 | 客户关系管理       |        83 | customer-relationship-management |             1 | 
-| 88 | 企业资源规划       |        83 | enterprise-resource-planning     |             1 | 
-| 89 | 供应链管理         |        83 | supply-chain-management          |             1 | 
-| 90 | 人力资源           |        83 | human-resources                  |             1 | 
-| 91 | 运营               |        83 | operations                       |             1 | 
-| 92 | 商业分析           |        83 | business-analysis                |             1 | 
-| 93 | 战略规划           |        83 | strategic-planning               |             1 | 
-| 94 | 公关               |        83 | public-relations                 |             1 | 
-| 95 | 项目管理           |        83 | project-management               |             1 | 
-| 96 | 广告               |        83 | advertising                      |             1 | 
-| 97 | 科学方法论         |         9 | scientific-methodology           |             1 | 
+
+
+
+
+#### 创建共享模块
+
+```bash
+$ python3 manage.py startapp global_utils
+$ rm global_utils/admin.py
+$ rm global_utils/apps.py
+$ rm global_utils/models.py
+$ rm global_utils/tests.py
+$ rm global_utils/views.py
+$ rm -r global_utils/migrations
+```
+
+等价于
+
+```bash
+$ touch global_utils/__init__.py
+```

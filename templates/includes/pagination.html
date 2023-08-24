@@ -1,0 +1,31 @@
+{% load template_tags %}
+
+<nav aria-label="step-links">
+    <ul class="pagination justify-content-end">
+        {% if page.has_previous %}
+            <li class="page-item"><a class="page-link" href="?{% param_replace page=page.previous_page_number %}">上一页</a></li>
+        {% endif %}
+
+        {% if page.number > 1 %}
+            <li class="page-item"><a class="page-link" href="?{% param_replace page=1 %}">1</a></li>
+        {% endif %}
+        {% if page.number > 2 %}
+            <li class="page-item disabled"><a class="page-link">...</a></li>
+        {% endif %}
+        <li class="page-item active" aria-current="page">
+            <span class="page-link">{{ page.number }}</span>
+        </li>
+        {% if page.number|add:1 < page.paginator.num_pages %}
+            <li class="page-item disabled"><a class="page-link">...</a></li>
+        {% endif %}
+        {% if page.number < page.paginator.num_pages %}
+            <li class="page-item"><a class="page-link" href="?{% param_replace page=page.paginator.num_pages %}">{{ page.paginator.num_pages }}</a></li>
+        {% endif %}
+
+        {% if page.has_next %}
+            <li class="page-item"><a class="page-link" href="?{% param_replace page=page.next_page_number %}">下一页</a></li>
+        {% endif %}
+
+        <li class="page-item disabled"><a class="page-link">共 {{ page.paginator.count }} 条</a></li>
+    </ul>
+</nav>

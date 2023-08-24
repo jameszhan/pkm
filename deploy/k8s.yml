@@ -17,8 +17,12 @@ spec:
     spec:
       containers:
         - name: supernotes
-          image: "jameszhan/pkm:0.0.1"
+          image: "jameszhan/pkm:0.0.7"
           imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: "/app/.env"
+              subPath: .env
+              name: pkm-env-vol
           ports:
             - name: http
               containerPort: 8000
@@ -45,6 +49,6 @@ spec:
             - name: DJANGO_SETTINGS_MODULE
               value: "settings.production"
       volumes:
-        - name: supernotes-env-vol
+        - name: pkm-env-vol
           configMap:
             name: pkm-env

@@ -1,10 +1,26 @@
 from django.http import HttpResponse, JsonResponse
+from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Book, Category
+from .models import Publisher, Category
+
+
+def healthz(request):
+    response = HttpResponse("OK")
+    response['X-Client-Host'] = request.get_host()
+    return response
 
 
 def category_tree(request):
     return render(request, 'categories/tree.html', {})
+
+
+def publisher_list(request):
+    publishers = Publisher.objects.order_by('isbn')
+    paginator = Paginator(publishers, 20)
+    page_number = request.GET.get('page', 1)
+    publishers = paginator.get_page(page_number)
+
+    return render(request, 'publishers/index.html', locals())
 
 
 def categories_api(request):

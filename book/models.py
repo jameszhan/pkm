@@ -68,3 +68,14 @@ class BookAuthor(models.Model):
     class Meta:
         db_table = 'book_authors'
         unique_together = ('book', 'author', 'role')
+
+
+class Publisher(models.Model):
+    isbn = models.CharField(max_length=10, unique=True)
+    name = models.CharField(max_length=64, unique=True)
+    addr = models.CharField(max_length=64, null=True, blank=True)
+    code = models.CharField(max_length=64, null=True, blank=True, unique=True)
+
+    class Meta:
+        db_table = 'publisher'
+

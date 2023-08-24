@@ -1,0 +1,33 @@
+{% extends "layouts/books.html" %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+    <div class="row g-5">
+        <div class="col-md-8 table-responsive">
+            <table class="table table-striped">
+                <caption>出版社</caption>
+                <thead>
+                <tr>
+                    <th>出版社</th>
+                    <th>ISBN</th>
+                    <th>统一书号</th>
+                    <th>地址</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for publisher in publishers %}
+                <tr>
+                    <td>{{ publisher.name }}</td>
+                    <td>{{ publisher.isbn }}</td>
+                    <td>{{ publisher.code }}</td>
+                    <td>{{ publisher.addr }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% include "includes/pagination.html" with page=publishers %}
+        </div>
+    </div>
+{% endblock %}
