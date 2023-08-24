@@ -9,7 +9,7 @@ $ kubectl get configmap pkm-env -n geek-apps -o yaml
 #### 构建镜像
 
 ```bash
-$ docker buildx build --platform linux/amd64 -t jameszhan/pkm:0.0.7 . --push
+$ docker buildx build --platform linux/amd64 -t jameszhan/pkm:0.0.8 . --push
 $ kubectl apply -f deploy/k8s.yml
 ```
 
