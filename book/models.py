@@ -29,14 +29,24 @@ class Author(models.Model):
         unique_together = ('name', 'nationality')
 
 
+class Publisher(models.Model):
+    isbn = models.CharField(max_length=10, unique=True)
+    name = models.CharField(max_length=64, unique=True)
+    addr = models.CharField(max_length=64, null=True, blank=True)
+    code = models.CharField(max_length=64, null=True, blank=True, unique=True)
+
+    class Meta:
+        db_table = 'publisher'
+
+
 class Book(models.Model):
     title = models.CharField(max_length=200, db_index=True)
     subtitle = models.CharField(max_length=200, default='', null=False, blank=True, db_index=True)
     authors = models.ManyToManyField(Author, through='BookAuthor')
     publication_date = models.DateField(db_index=True)
     isbn = models.CharField('ISBN', max_length=20, unique=True)
+    publisher = models.ForeignKey(Publisher, on_delete=models.SET_NULL, null=True, blank=True)
     rating = models.FloatField(null=True, blank=True)
-    publisher = models.CharField(max_length=100, null=True, blank=True)
     cover_image = models.URLField(null=True, blank=True)
     categories = models.ManyToManyField(Category, related_name="books")
     description = models.TextField(null=True, blank=True)
@@ -70,12 +80,5 @@ class BookAuthor(models.Model):
         unique_together = ('book', 'author', 'role')
 
 
-class Publisher(models.Model):
-    isbn = models.CharField(max_length=10, unique=True)
-    name = models.CharField(max_length=64, unique=True)
-    addr = models.CharField(max_length=64, null=True, blank=True)
-    code = models.CharField(max_length=64, null=True, blank=True, unique=True)
 
-    class Meta:
-        db_table = 'publisher'
 
