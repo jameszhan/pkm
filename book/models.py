@@ -23,10 +23,19 @@ class Author(models.Model):
     name = models.CharField(max_length=200)
     aliases = models.JSONField(blank=True, null=True)
     nationality = CountryField()
+    descriptor = models.CharField(max_length=200, default='')
+
+    def __str__(self):
+        descriptor_str = ""
+        if self.descriptor:
+            descriptor_str = "(" + self.descriptor + ")"
+
+        return f'[{self.nationality}]{self.name}{descriptor_str}'
 
     class Meta:
         db_table = 'author'
-        unique_together = ('name', 'nationality')
+        unique_together = ('name', 'nationality', 'descriptor')
+        ordering = ('id',)
 
 
 class Publisher(models.Model):
@@ -34,6 +43,7 @@ class Publisher(models.Model):
     name = models.CharField(max_length=64, unique=True)
     addr = models.CharField(max_length=64, null=True, blank=True)
     code = models.CharField(max_length=64, null=True, blank=True, unique=True)
+    alias = models.CharField(max_length=64, null=True, blank=True, unique=True)
 
     class Meta:
         db_table = 'publisher'
@@ -44,8 +54,9 @@ class Book(models.Model):
     subtitle = models.CharField(max_length=200, default='', null=False, blank=True, db_index=True)
     authors = models.ManyToManyField(Author, through='BookAuthor')
     publication_date = models.DateField(db_index=True)
-    isbn = models.CharField('ISBN', max_length=20, unique=True)
-    publisher = models.ForeignKey(Publisher, on_delete=models.SET_NULL, null=True, blank=True)
+    isbn = models.CharField('ISBN', max_length=20)
+    version = models.CharField(max_length=20, default='')
+    publisher = models.ForeignKey(Publisher, on_delete=models.SET_NULL, null=True, blank=True, related_name="books")
     rating = models.FloatField(null=True, blank=True)
     cover_image = models.URLField(null=True, blank=True)
     categories = models.ManyToManyField(Category, related_name="books")
@@ -61,6 +72,7 @@ class Book(models.Model):
 
     class Meta:
         db_table = 'book'
+        unique_together = ('isbn', 'version')
 
 
 AUTHOR_ROLES = [
