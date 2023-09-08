@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: supernotes
-          image: "jameszhan/pkm:0.0.8"
+          image: "jameszhan/pkm:0.0.10"
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - mountPath: "/app/.env"
