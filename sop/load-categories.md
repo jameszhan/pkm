@@ -12,6 +12,17 @@ WITH RECURSIVE category_cte AS (
 )
 SELECT id, name, parent_id, slug, created_by_id FROM category_cte;
 
+WITH RECURSIVE category_cte AS (
+    SELECT id, name, slug, parent_id, null, null, created_by_id
+    FROM category
+    WHERE parent_id IS NULL
+    UNION ALL
+    SELECT c.id, c.name, c.slug, c.parent_id, ct.name, ct.slug, c.created_by_id
+    FROM category AS c
+    JOIN category_cte AS ct ON c.parent_id = ct.id
+)
+SELECT id, name, slug, parent_id, parent_name, parent_slug, created_by_id FROM category_cte;
+
 INSERT INTO pkm.category (name, parent_id, slug, created_by_id, created_at, updated_at)
 SELECT name, parent_id, slug, created_by_id, NOW(), NOW() FROM supernotes.books_category
 WHERE parent_id IS NULL ORDER BY id;
