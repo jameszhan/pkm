@@ -23,7 +23,7 @@ $ python3 manage.py collectstatic
 #### 构建镜像
 
 ```bash
-$ docker buildx build --platform linux/amd64 -t jameszhan/pkm:0.0.11 . --push
+$ docker buildx build --platform linux/amd64 -t jameszhan/pkm:0.0.12 . --push
 $ kubectl apply -f deploy/k8s.yml
 ```
 

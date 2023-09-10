@@ -56,7 +56,7 @@ class PublisherFilter(SimpleListFilter):
 class CategoryAdmin(admin.ModelAdmin):
     exclude = ('created_by',)
     # readonly_fields = ('created_by',)
-    list_display = ('id', 'slug', 'name', 'parent')
+    list_display = ('id', 'slug', 'name', 'parent', 'topic')
     prepopulated_fields = {'slug': ('name', )}
     search_fields = ['slug', 'name']
 
