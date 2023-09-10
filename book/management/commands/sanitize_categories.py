@@ -33,24 +33,25 @@ class Command(BaseCommand):
         with connection.cursor() as cursor:
             cursor.execute("""
                 WITH RECURSIVE category_cte AS (
-                    SELECT id, name, slug, parent_id,  CAST(NULL AS CHAR(100)) AS parent_slug, created_by_id
+                    SELECT id, name, slug, topic, parent_id,  CAST(NULL AS CHAR(100)) AS parent_slug, created_by_id
                     FROM old_category
                     WHERE parent_id IS NULL
                     UNION ALL
-                    SELECT c.id, c.name, c.slug, c.parent_id, ct.slug AS parent_slug, c.created_by_id
+                    SELECT c.id, c.name, c.slug, c.topic, c.parent_id, ct.slug AS parent_slug, c.created_by_id
                     FROM old_category AS c
                     JOIN category_cte AS ct ON c.parent_id = ct.id
                 )
-                SELECT id, name, slug, parent_id, parent_slug, created_by_id FROM category_cte ORDER BY parent_id, id;
+                SELECT id, name, slug, topic, parent_id, parent_slug, created_by_id 
+                FROM category_cte ORDER BY parent_id, id;
             """)
 
             parent_category_map = {}
             for row in cursor.fetchall():
-                _, name, slug, _, parent_slug, _ = row
+                _, name, slug, topic, _, parent_slug, _ = row
                 if name not in categories_l1:
                     if parent_slug not in parent_category_map:
                         parent_category_map[parent_slug] = []
-                    parent_category_map[parent_slug].append((name, slug))
+                    parent_category_map[parent_slug].append((name, slug, topic))
 
             queue = deque()
             category_ids = {}
@@ -64,9 +65,10 @@ class Command(BaseCommand):
                 slug = queue.popleft()
                 if slug in parent_category_map:
                     subcategories = parent_category_map[slug]
-                    for (n, s) in subcategories:
+                    for (n, s, t) in subcategories:
                         r, created = Category.objects.get_or_create(slug=s,
                                                                     name=n,
+                                                                    topic=t,
                                                                     parent_id=category_ids[slug],
                                                                     created_by_id=1)
                         self.stdout.write(self.style.SUCCESS(f'{"创建" if created else "更新"} {n}({s}-{r.id}) 成功'))

@@ -20,6 +20,21 @@ class Category(models.Model):
         db_table = 'category'
 
 
+class Catalog(models.Model):
+    name = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=100, unique=True)
+    topic = models.TextField(null=True, blank=True)
+    parents = models.ManyToManyField('self', symmetrical=False, blank=True, related_name='children')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = 'catalog'
+
+
 class Author(models.Model):
     name = models.CharField(max_length=200)
     aliases = models.JSONField(blank=True, null=True)

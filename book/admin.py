@@ -6,7 +6,7 @@ from taggit.forms import TagWidget
 from taggit.managers import TaggableManager
 from reversion.admin import VersionAdmin
 from global_utils.filters import TagsFilter
-from .models import Category, Publisher, Author, Book
+from .models import Category, Catalog, Publisher, Author, Book
 
 
 class BookTagsFilter(TagsFilter):
@@ -52,18 +52,49 @@ class PublisherFilter(SimpleListFilter):
             return queryset
 
 
+
+
+
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     exclude = ('created_by',)
     # readonly_fields = ('created_by',)
-    list_display = ('id', 'slug', 'name', 'parent', 'topic')
+    list_display = ('id', 'slug', 'name', 'parent', 'shorten_topic')
     prepopulated_fields = {'slug': ('name', )}
     search_fields = ['slug', 'name']
+
+    def shorten_topic(self, obj):
+        text = obj.topic
+        if text is None:
+            return None
+        return (text[:20] + '...') if len(text) > 20 else text
+    shorten_topic.short_description = 'Topic'
 
     def save_model(self, request, obj, form, change):
         if not obj.created_by_id:
             obj.created_by = request.user
         super().save_model(request, obj, form, change)
+
+
+@admin.register(Catalog)
+class CatalogAdmin(admin.ModelAdmin):
+    list_display = ('id', 'slug', 'name', 'parent_list', 'shorten_topic')
+    prepopulated_fields = {'slug': ('name', )}
+    search_fields = ['slug', 'name']
+
+    def parent_list(self, obj):
+        return ", ".join([str(cat) for cat in obj.parents.all()])
+    parent_list.short_description = 'Parents'
+
+    def shorten_topic(self, obj):
+        text = obj.topic
+        if text is None:
+            return None
+        return (text[:20] + '...') if len(text) > 20 else text
+    shorten_topic.short_description = 'Topic'
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related('parents')
 
 
 @admin.register(Publisher)

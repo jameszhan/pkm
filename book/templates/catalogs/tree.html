@@ -1,0 +1,74 @@
+{% extends "layouts/books.html" %}
+
+{% block head %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.15/themes/default/style.min.css" />
+    <style>
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="row g-5">
+        <aside class="col-md-4">
+            <h4>图书类目</h4>
+            <div id="category_tree"></div>
+        </aside>
+        <article class="col-md-8">
+
+        </article>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.15/jstree.min.js"></script>
+    <script>
+        $.ajaxSetup({
+            headers: {'X-CSRFToken': $('meta[name="csrf_token"]').attr('content')},
+        });
+
+        const moveCategoryURLTemplate = "{% url 'books:api_catalogs_move' '0' %}";
+        const copyCategoryURLTemplate = "{% url 'books:api_catalogs_copy' '0' %}";
+        const deleteCategoryURLTemplate = "{% url 'books:api_catalogs_delete' '0' %}";
+
+        $(function () {
+            $.ajax({
+                url: "{% url 'books:api_catalogs' %}",
+                dataType: "json",
+                success: function (data) {
+                    let $category_tree = $('#category_tree');
+                    $category_tree.jstree({
+                        'core': {
+                            'data': data,
+                            "check_callback": true
+                        },
+                        "types": {
+                            "default": {"icon": "jstree-folder"}
+                        },
+                        "plugins": ["unique", "dnd", "contextmenu", "state", "types", "wholerow"]
+                    });
+
+                    $category_tree.on("move_node.jstree", function (e, data) {
+                        if (data.old_parent !== data.parent) {
+                            let moveUrl = moveCategoryURLTemplate.replace('/0/', '/' + data.node.id + '/');
+                            $.post(moveUrl, {new_parent_id: data.parent, old_parent_id: data.old_parent});
+                        }
+                    });
+                    $category_tree.on("copy_node.jstree", function (e, data) {
+                        if (data.old_parent !== data.parent) {
+                            let moveUrl = copyCategoryURLTemplate.replace('/0/', '/' + data.original.id + '/');
+                            $.post(moveUrl, {new_parent_id: data.parent, old_parent_id: data.old_parent}).done(function (){
+                                window.location.reload();
+                            });
+                        }
+                    });
+                    $category_tree.on("delete_node.jstree", function (e, data) {
+                        if (data.old_parent !== data.parent) {
+                            let moveUrl = deleteCategoryURLTemplate.replace('/0/', '/' + data.node.id + '/');
+                            $.post(moveUrl, {parent_id: data.parent});
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}
