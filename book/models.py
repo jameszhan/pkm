@@ -5,8 +5,9 @@ from taggit.managers import TaggableManager
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
+    topic = models.TextField(null=True, blank=True)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='subcategories')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -13,15 +13,15 @@ WITH RECURSIVE category_cte AS (
 SELECT id, name, parent_id, slug, created_by_id FROM category_cte;
 
 WITH RECURSIVE category_cte AS (
-    SELECT id, name, slug, parent_id, null, null, created_by_id
-    FROM category
+    SELECT id, name, slug, parent_id,  CAST(NULL AS CHAR(100)) AS parent_slug, created_by_id
+    FROM old_category
     WHERE parent_id IS NULL
     UNION ALL
-    SELECT c.id, c.name, c.slug, c.parent_id, ct.name, ct.slug, c.created_by_id
-    FROM category AS c
+    SELECT c.id, c.name, c.slug, c.parent_id, ct.slug AS parent_slug, c.created_by_id
+    FROM old_category AS c
     JOIN category_cte AS ct ON c.parent_id = ct.id
 )
-SELECT id, name, slug, parent_id, parent_name, parent_slug, created_by_id FROM category_cte;
+SELECT id, name, slug, parent_id, parent_slug, created_by_id FROM category_cte ORDER BY parent_id;
 
 INSERT INTO pkm.category (name, parent_id, slug, created_by_id, created_at, updated_at)
 SELECT name, parent_id, slug, created_by_id, NOW(), NOW() FROM supernotes.books_category
@@ -110,4 +110,19 @@ ALTER TABLE pkm.category AUTO_INCREMENT = 84;
 INSERT INTO pkm.category (name, parent_id, slug, created_by_id, created_at, updated_at)
 SELECT name, 21, slug, created_by_id, NOW(), NOW() FROM supernotes.books_category
 WHERE parent_id = 83 ORDER BY id;
+```
+
+
+```python
+from book.models import Category
+
+def print_category_tree(category, level=0):
+    print('-' * level + f"- {category.name} ({category.slug})")
+    for subcategory in category.subcategories.all():
+        print_category_tree(subcategory, level + 1)
+
+root_categories = Category.objects.filter(parent__isnull=True)
+
+for root_category in root_categories:
+    print_category_tree(root_category)
 ```
