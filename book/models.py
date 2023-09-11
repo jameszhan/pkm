@@ -61,6 +61,9 @@ class Publisher(models.Model):
     code = models.CharField(max_length=64, null=True, blank=True, unique=True)
     alias = models.CharField(max_length=64, null=True, blank=True, unique=True)
 
+    def __str__(self):
+        return f'{self.name}({self.isbn})'
+
     class Meta:
         db_table = 'publisher'
 
