@@ -52,9 +52,6 @@ class PublisherFilter(SimpleListFilter):
             return queryset
 
 
-
-
-
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     exclude = ('created_by',)

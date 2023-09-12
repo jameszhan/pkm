@@ -125,4 +125,6 @@ root_categories = Category.objects.filter(parent__isnull=True)
 
 for root_category in root_categories:
     print_category_tree(root_category)
+
+cs = Category.objects.get(slug='computer-science')
 ```
