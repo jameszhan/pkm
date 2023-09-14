@@ -127,4 +127,5 @@ for root_category in root_categories:
     print_category_tree(root_category)
 
 cs = Category.objects.prefetch_related("subcategories").get(slug='computer-science')
+print_category_tree(cs)
 ```
