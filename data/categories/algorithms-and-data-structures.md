@@ -147,7 +147,7 @@
             - [ ] 深度优先搜索
             - [ ] 广度优先搜索
             - [ ] 双向搜索 (Bidirectional Search)
-              - [ ] A\*搜索算法 (A\* Search Algorithm)
+              - [ ] A*搜索算法 (A Star Search Algorithm)
         - [ ] 图的着色与匹配（Graph Coloring & Matching）
             - [ ] 图着色 (Graph Coloring)
             - [ ] 最大匹配 (Maximum Matching)  
@@ -167,13 +167,6 @@
             - [ ] Trie树 (Trie)
             - [ ] 后缀数组 (Suffix Array)
             - [ ] 后缀树 (Suffix Tree)
-        - [ ] 字符串操作 (String Manipulation)
-            - [ ] 反转字符串 (Reverse String)
-            - [ ] 字符串拼接 (String Concatenation)
-            - [ ] 字符串裁剪 (String Trimming)
-        - [ ] 字符串分解 (String Parsing)
-            - [ ] 字符串分割 (String Splitting)
-            - [ ] 正则表达式 (Regular Expressions)
         - [ ] 回文问题 (Palindrome Problems)
             - [ ] 判断回文 (Palindrome Checking)
             - [ ] 最长回文子串 (Longest Palindromic Substring)
@@ -183,9 +176,6 @@
         - [ ] 文本相似度和距离 (Text Similarity and Distance)
             - [ ] Levenshtein距离 (Levenshtein Distance)
             - [ ] Jaccard相似度 (Jaccard Similarity)
-        - [ ] 高级主题 (Advanced Topics)
-            - [ ] 最长公共子序列 (Longest Common Subsequence)
-            - [ ] 最长公共子串 (Longest Common Substring)
     - [ ] 几何算法 (Geometric Algorithms)
         - [ ] 凸包 (Convex Hull)
         - [ ] 线段交点检测 (Line Segment Intersection)
@@ -196,13 +186,6 @@
     - [ ] 在线与流算法 (Online and Streaming Algorithms)
         - [ ] 在线背包问题 (Online Knapsack Problem)
         - [ ] 数据流中位数检测 (Median in Data Streams)
-
-- [ ] 并行与分布式算法 (Parallel and Distributed Algorithms)
-    - [ ] MapReduce算法 (MapReduce Algorithms)
-    - [ ] 分布式搜索 ()
-    - [ ] 一致性算法 (Consensus Algorithms)
-        - [ ] Paxos算法 (Paxos)
-        - [ ] Raft算法 (Raft)
 
 - [ ] 并行与分布式算法 (Parallel and Distributed Algorithms)
     - [ ] 数据并行算法 (Data Parallel Algorithms)
@@ -232,5 +215,9 @@
         - [ ] 三阶段提交 (Three-Phase Commit)
         - [ ] 热备份 (Hot Standby)
         - [ ] 冷备份 (Cold Standby)
+
+
+
+
 
 
