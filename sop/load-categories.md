@@ -112,7 +112,6 @@ SELECT name, 21, slug, created_by_id, NOW(), NOW() FROM supernotes.books_categor
 WHERE parent_id = 83 ORDER BY id;
 ```
 
-
 ```python
 from book.models import Category
 
@@ -128,4 +127,13 @@ for root_category in root_categories:
 
 cs = Category.objects.prefetch_related("subcategories").get(slug='computer-science')
 print_category_tree(cs)
+```
+
+```sql
+SET foreign_key_checks = 0;
+DELETE FROM category WHERE id >= 291;
+SET foreign_key_checks = 1;
+
+SELECT * FROM category;
+
 ```
