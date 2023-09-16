@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'taggit',
     'global_utils',
     'book',
+    'knowledge_map',
 ]
 
 MIDDLEWARE = [

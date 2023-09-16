@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'reversion',
     'global_utils',
     'book',
+    'knowledge_map',
 ]
 
 MIDDLEWARE = [
