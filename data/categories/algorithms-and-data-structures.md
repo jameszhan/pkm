@@ -103,7 +103,7 @@
             - [ ] 大Ω符号 (Big Omega Notation)
             - [ ] 大Θ符号 (Big Theta Notation)
     - [ ] 算法优化方法 (Algorithm Optimization Techniques)
-        - [ ] 动态编程 (Dynamic Programming)
+        - [ ] 动态规划 (Dynamic Programming)
             - [ ] 递归与记忆化 (Recursion and Memoization)
             - [ ] 自底向上方法 (Bottom-Up Approach)
         - [ ] 启发式方法 (Heuristic Methods)
@@ -147,7 +147,7 @@
             - [ ] 深度优先搜索
             - [ ] 广度优先搜索
             - [ ] 双向搜索 (Bidirectional Search)
-              - [ ] A*搜索算法 (A Star Search Algorithm)
+            - [ ] A*搜索算法 (A Star Search Algorithm)
         - [ ] 图的着色与匹配（Graph Coloring & Matching）
             - [ ] 图着色 (Graph Coloring)
             - [ ] 最大匹配 (Maximum Matching)  
