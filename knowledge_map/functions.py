@@ -82,16 +82,9 @@ def eval_category_relation_context(relation, parent_slug):
             context_config = json.loads(relation.context)
             if 'expression' in context_config:
                 expression = context_config['expression']
-                ret = eval(expression, {}, {'parent_slug': parent_slug,
-                                            'slug': relation.parent.slug,
-                                            'child_slug': relation.child.slug})
-                # print(f'expression "{expression}" with locals {parent_slug}|{relation.parent.slug}'
-                #       f'|{relation.child.slug} and get {ret}')
-                if not ret:
-                    return False
+                return eval(expression, {}, {'parent_slug': parent_slug, 'slug': relation.parent.slug, 'child_slug': relation.child.slug})
         except Exception as e:
             logger.error(f"eval expression error: {e}", exc_info=True)
-            # traceback.print_exc()
     return True
 
 
