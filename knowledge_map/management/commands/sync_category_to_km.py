@@ -14,8 +14,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         km_catalogs = {}
         for category in Category.objects.prefetch_related('parent').order_by('id'):
-            r, created = KMCategory.objects.get_or_create(id=category.id,
-                                                          slug=category.slug,
+            r, created = KMCategory.objects.get_or_create(slug=category.slug,
                                                           name=category.name,
                                                           topic=category.topic)
             self.stdout.write(self.style.SUCCESS(f'{"创建" if created else "忽略"} {r.name}({r.slug}-{r.id})'))
