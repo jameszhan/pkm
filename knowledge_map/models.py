@@ -22,4 +22,5 @@ class CategoryRelation(models.Model):
 
     class Meta:
         db_table = 'km_category_relation'
+        unique_together = ('parent', 'child')
 
