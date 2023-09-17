@@ -6,6 +6,7 @@ from django.db import connection
 from book.models import Category
 
 # CREATE TABLE old_category SELECT * FROM category;
+# CREATE TABLE category_v1 SELECT * FROM category;
 # SET foreign_key_checks = 0;
 # TRUNCATE TABLE category;
 # SET foreign_key_checks = 1;
@@ -34,11 +35,11 @@ class Command(BaseCommand):
             cursor.execute("""
                 WITH RECURSIVE category_cte AS (
                     SELECT id, name, slug, topic, parent_id,  CAST(NULL AS CHAR(100)) AS parent_slug, created_by_id
-                    FROM old_category
+                    FROM category_v1
                     WHERE parent_id IS NULL
                     UNION ALL
                     SELECT c.id, c.name, c.slug, c.topic, c.parent_id, ct.slug AS parent_slug, c.created_by_id
-                    FROM old_category AS c
+                    FROM category_v1 AS c
                     JOIN category_cte AS ct ON c.parent_id = ct.id
                 )
                 SELECT id, name, slug, topic, parent_id, parent_slug, created_by_id 
