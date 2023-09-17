@@ -4,7 +4,7 @@ from .models import Category, CategoryRelation
 
 class CategoryRelationInline(admin.TabularInline):
     model = CategoryRelation
-    fk_name = 'parent'
+    fk_name = 'child'
     extra = 1
 
 
@@ -16,7 +16,7 @@ class CatalogAdmin(admin.ModelAdmin):
     search_fields = ['slug', 'name']
 
     def parent_list(self, obj):
-        return ", ".join([str(cat) for cat in obj.parents.all()])
+        return ", ".join([r.parent.name for r in obj.parents.all()])
     parent_list.short_description = 'Parents'
 
     def shorten_topic(self, obj):

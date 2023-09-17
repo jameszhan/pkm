@@ -23,8 +23,10 @@ $ python3 manage.py collectstatic
 #### 构建镜像
 
 ```bash
-$ docker buildx build --platform linux/amd64 -t jameszhan/pkm:0.0.13 . --push
+$ docker buildx build --platform linux/amd64 -t jameszhan/pkm:0.0.16 . --push
+
 $ kubectl apply -f deploy/k8s.yml
+$ kubectl get pods -o wide -n geek-apps -w
 ```
 
 #### 配置服务和Ingress
