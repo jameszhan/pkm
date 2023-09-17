@@ -22,4 +22,5 @@ urlpatterns = [
     path('healthz', healthz, name='healthz'),
     path('admin/', admin.site.urls),
     path('books/', include('book.urls')),
+    path('km/', include('knowledge_map.urls')),
 ]

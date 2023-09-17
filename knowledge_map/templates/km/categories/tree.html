@@ -1,0 +1,95 @@
+{% extends "layouts/km.html" %}
+
+{% block head %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.15/themes/default/style.min.css" />
+    <style>
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="row g-5">
+        <aside class="col-md-4">
+            <h4>知识类目</h4>
+            <div id="category_tree"></div>
+        </aside>
+        <article class="col-md-8">
+        </article>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.15/jstree.min.js"></script>
+    <script>
+        $.ajaxSetup({
+            headers: {'X-CSRFToken': $('meta[name="csrf_token"]').attr('content')},
+        });
+
+        const moveCategoryURLTemplate = "{% url 'km:api_move_category' 'PLACEHOLDER' %}";
+        const copyCategoryURLTemplate = "{% url 'km:api_copy_category' 'PLACEHOLDER' %}";
+        const deleteCategoryURLTemplate = "{% url 'km:api_delete_category' 'PLACEHOLDER' %}";
+
+        $(function () {
+            $.ajax({
+                url: "{% if cat_slug %}{% url 'km:api_categories_slug' cat_slug %}{% else %}{% url 'km:api_categories' %}{% endif %}",
+                dataType: "json",
+                success: function (data) {
+                    let $category_tree = $('#category_tree');
+                    $category_tree.jstree({
+                        'core': {
+                            'data': data,
+                            "check_callback": true
+                        },
+                        "types": {
+                            "default": {"icon": "jstree-folder"},
+                            "root": {"icon": "jstree-folder"},
+                            "leaf": {"icon": "jstree-file"}
+                        },
+                        "contextmenu": {
+                            'items': function (o, cb) {
+                                return {
+                                    "remove" : {
+                                        "separator_before": false,
+                                        "icon": false,
+                                        "separator_after": false,
+                                        "_disabled": false, //(this.check("delete_node", data.reference, this.get_parent(data.reference), "")),
+                                        "label": "Delete",
+                                        "action": function (data) {
+                                            let inst = $.jstree.reference(data.reference), obj = inst.get_node(data.reference);
+                                            if (inst.is_selected(obj)) {
+                                                inst.delete_node(inst.get_selected());
+                                            } else {
+                                                inst.delete_node(obj);
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                        },
+                        "plugins": ["unique", "dnd", "contextmenu", "state", "types", "wholerow"]
+                    });
+
+                    $category_tree.on("move_node.jstree", function (e, data) {
+                        if (data.old_parent !== data.parent) {
+                            let moveUrl = moveCategoryURLTemplate.replace('/PLACEHOLDER/', '/' + data.node.data.slug + '/');
+                            console.log(moveCategoryURLTemplate, data.node.data.slug, moveUrl);
+                            $.post(moveUrl, {new_parent_slug: data.parent, old_parent_slug: data.old_parent});
+                        }
+                    });
+                    $category_tree.on("copy_node.jstree", function (e, data) {
+                        if (data.old_parent !== data.parent) {
+                            let copyUrl = copyCategoryURLTemplate.replace('/PLACEHOLDER/', '/' + data.original.data.slug + '/');
+                            $.post(copyUrl, {new_parent_slug: data.parent, old_parent_slug: data.old_parent}).done(function (){
+                                window.location.reload();
+                            });
+                        }
+                    });
+                    $category_tree.on("delete_node.jstree", function (e, data) {
+                        let deleteUrl = deleteCategoryURLTemplate.replace('/PLACEHOLDER/', '/' + data.node.data.slug + '/');
+                        $.post(deleteUrl, {parent_slug: data.parent});
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}
