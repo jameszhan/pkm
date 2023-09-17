@@ -23,7 +23,7 @@
         - [ ] 二分查找 (Binary Search)
         - [ ] 哈希查找 (Hash Search)
             - [ ] 开放寻址法 (Open Addressing)
-            - [ ] 链地址法 (Chaining)
+            - [ ] 链地址法 (Separate Chaining)
         - [ ] 树形查找 (Tree-based Search)
         - [ ] 图查找 (Graph Search)
         - [ ] 字符串查找 (String Search)
