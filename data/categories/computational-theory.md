@@ -1,31 +1,47 @@
 ## 计算理论 (Computational Theory)
 
-- [ ] 计算复杂性 (Computational Complexity)
+- [ ] 计算复杂性论 (Computational Complexity Theory)
     - [ ] P/NP问题 (P/NP Problems)
     - [ ] 时间复杂性 (Time Complexity)
     - [ ] 空间复杂性 (Space Complexity)
+    - [ ] 逼近算法 (Approximation Algorithms)
 - [ ] 自动机理论 (Automata Theory)
     - [ ] 有限自动机 (Finite Automata)
     - [ ] 推动自动机 (Pushdown Automata)
+    - [ ] 元胞自动机 (Cellular Automata)
     - [ ] 图灵机 (Turing Machines)
 - [ ] 形式语言 (Formal Languages)
     - [ ] 正则语言 (Regular Languages)
     - [ ] 上下文无关语言 (Context-Free Languages)
+    - [ ] 上下文相关语言 (Context-Sensitive Languages)
 - [ ] 可计算性理论 (Computability Theory)
     - [ ] 可计算函数 (Computable Functions)
     - [ ] 不可解问题 (Undecidable Problems)
+    - [ ] 递归枚举性 (Recursively Enumerable)
 - [ ] 信息论 (Information Theory)
+    - [ ] 最大似然估计 (Maximum Likelihood Estimation)
     - [ ] 香农熵 (Shannon Entropy)
+    - [ ] 联合熵 (Joint Entropy)
     - [ ] 信息增益 (Information Gain)
 - [ ] 密码学 (Cryptography)
     - [ ] 对称加密 (Symmetric-Key Cryptography)
     - [ ] 非对称加密 (Asymmetric-Key Cryptography)
     - [ ] 哈希函数 (Hash Functions)
+    - [ ] 量子密码学 (Quantum Cryptography)
 - [ ] 编码理论 (Coding Theory)
     - [ ] 纠错码 (Error-Correcting Codes)
     - [ ] 压缩编码 (Compression Coding)
+    - [ ] 信道编码 (Channel Coding)
+    - [ ] 源编码 (Source Coding)
 - [ ] 逻辑与证明理论 (Logic and Proof Theory)
     - [ ] 命题逻辑 (Propositional Logic)
     - [ ] 一阶逻辑 (First-Order Logic)
+    - [ ] 高阶逻辑 (Higher-Order Logic)
+    - [ ] 模态逻辑 (Modal Logic)
 
 
+
+
+
+
+  
