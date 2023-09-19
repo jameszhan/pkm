@@ -43,7 +43,7 @@
     - [ ] 源编码 (Source Coding)
     - [ ] 网络编码 (Network Coding)
 - [ ] 逻辑与证明理论 (Logic and Proof Theory)
-    - [ ] 类型论（Type Theory）
+    - [ ] 类型论 (Type Theory)
     - [ ] 命题逻辑 (Propositional Logic)
     - [ ] 一阶逻辑 (First-Order Logic)
     - [ ] 高阶逻辑 (Higher-Order Logic)

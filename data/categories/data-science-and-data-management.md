@@ -1,6 +1,6 @@
 ## 数据科学与数据管理 (Data Science and Data Management)
 
-- [] 数据科学 (Data Science)
+- [ ] 数据科学 (Data Science)
     - [ ] 数据分析 (Data Analytics)
         - [ ] 描述性分析 (Descriptive Analytics)
         - [ ] 推断性分析 (Inferential Analytics)
@@ -52,6 +52,6 @@
         - [ ] 数据安全与合规性 (Data Security and Compliance)
             - [ ] 数据加密 (Data Encryption)
             - [ ] 数据掩码与脱敏 (Data Masking and Anonymization)
-            - [ ] 数据审计（Data Auditing）
-        - [ ] 数据备份与恢复（Data Backup and Recovery）
+            - [ ] 数据审计 (Data Auditing)
+        - [ ] 数据备份与恢复 (Data Backup and Recovery)
 
