@@ -33,6 +33,7 @@
         - [ ] 近似查找 (Approximate Search)
             - [ ] 局部敏感哈希 (Locality-Sensitive Hashing)
             - [ ] 最近邻搜索 (Nearest Neighbor Search)
+        - [ ] 分布式查找（Distributed Search） 
 
 - [ ] 数据结构 (Data Structures)
     - [ ] 线性数据结构 (Linear Data Structures)
@@ -163,6 +164,7 @@
             - [ ] 网络流问题 (Network Flow Problems)
                 - [ ] Ford-Fulkerson算法 (Ford-Fulkerson Algorithm)
                 - [ ] Edmonds-Karp算法 (Edmonds-Karp Algorithm)
+                - [ ] 最大流最小割（Max Flow Min Cut）
         - [ ] 图的连通性问题（Graph Connectivity）
             - [ ] 强连通分量 (Strongly Connected Components)
             - [ ] 割点与桥 (Articulation Points & Bridges)

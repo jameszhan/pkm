@@ -2,7 +2,9 @@
 
 - [ ] 操作系统 (Operating Systems)
     - [ ] 进程管理 (Process Management)
+        - [ ] 调度算法 (Scheduling Algorithms)
     - [ ] 内存管理 (Memory Management)
+    - [ ] I/O 管理 (I/O Management)
     - [ ] 文件系统 (File Systems)
     - [ ] 设备驱动程序 (Device Drivers)
     - [ ] 用户接口 (User Interfaces)
@@ -12,16 +14,26 @@
     - [ ] 虚拟化技术 (Virtualization Technologies)
 - [ ] 计算机网络 (Computer Networking)
     - [ ] 网络协议 (Network Protocols)
+        - [ ] 数据传输 (Data Transmission)
+            - [ ] TCP/IP
+            - [ ] UDP
     - [ ] 网络安全 (Network Security)
         - [ ] 防火墙 (Firewalls)
         - [ ] VPNs (Virtual Private Networks)
     - [ ] 互联网技术 (Internet Technologies)
+        - [ ] 网络服务 (Network Services)
+            - [ ] DNS
+            - [ ] HTTP
+            - [ ] FTP
     - [ ] 无线与移动网络 (Wireless and Mobile Networking)
     - [ ] 网络拓扑 (Network Topologies)
     - [ ] 网络设备 (Networking Devices)
         - [ ] 路由器 (Routers)
         - [ ] 交换机 (Switches)
     - [ ] 云计算与边缘计算 (Cloud and Edge Computing)
+    - [ ] 网络性能与优化 (Network Performance and Optimization)
+        - [ ] 负载均衡 (Load Balancing)
+        - [ ] 流量控制 (Traffic Control)
 - [ ] 系统架构与硬件 (System Architecture and Hardware)
     - [ ] 处理器架构 (Processor Architecture)
         - [ ] 中央处理器 (CPUs)
@@ -36,7 +48,20 @@
     - [ ] 并行与分布式计算 (Parallel and Distributed Computing)
         - [ ] 集群计算 (Cluster Computing)
         - [ ] 网格计算 (Grid Computing)
-
+    - [ ] 功耗与节能 (Power Consumption and Efficiency)
+    - [ ] 嵌入式系统 (Embedded Systems)
+- [ ] 分布式系统 (Distributed Systems)
+    - [ ] 分布式计算模型 (Distributed Computing Models)
+    - [ ] 分布式数据库 (Distributed Databases)
+    - [ ] 分布式文件系统 (Distributed File Systems)
+    - [ ] 分布式锁 (Distributed Locking)
+    - [ ] 分布式一致性 (Distributed Consistency)
+    - [ ] 分布式事务 (Distributed Transactions)
+    - [ ] 故障容错与恢复 (Fault Tolerance and Recovery)
+        - [ ] 故障检测 (Fault Detection)
+        - [ ] 故障恢复 (Fault Recovery)
+        - [ ] 数据备份与复制 (Data Backup and Replication)
+- [ ] 系统与网络监控 (System and Network Monitoring)
 
 
 

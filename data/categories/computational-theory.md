@@ -5,6 +5,9 @@
     - [ ] 时间复杂性 (Time Complexity)
     - [ ] 空间复杂性 (Space Complexity)
     - [ ] 逼近算法 (Approximation Algorithms)
+    - [ ] 交互式证明系统 (Interactive Proof Systems)
+        - [ ] 零知识证明 (Zero-Knowledge Proofs)
+        - [ ] 多重角色证明 (Multi-Prover Interactive Proofs)
 - [ ] 自动机理论 (Automata Theory)
     - [ ] 有限自动机 (Finite Automata)
     - [ ] 推动自动机 (Pushdown Automata)
@@ -18,22 +21,29 @@
     - [ ] 可计算函数 (Computable Functions)
     - [ ] 不可解问题 (Undecidable Problems)
     - [ ] 递归枚举性 (Recursively Enumerable)
+    - [ ] Church-Turing论题 (Church-Turing Thesis)
 - [ ] 信息论 (Information Theory)
     - [ ] 最大似然估计 (Maximum Likelihood Estimation)
     - [ ] 香农熵 (Shannon Entropy)
     - [ ] 联合熵 (Joint Entropy)
+    - [ ] 相对熵 (Kullback-Leibler Divergence)
     - [ ] 信息增益 (Information Gain)
+    - [ ] 信息距离 (Information Distance)
 - [ ] 密码学 (Cryptography)
     - [ ] 对称加密 (Symmetric-Key Cryptography)
     - [ ] 非对称加密 (Asymmetric-Key Cryptography)
     - [ ] 哈希函数 (Hash Functions)
     - [ ] 量子密码学 (Quantum Cryptography)
+    - [ ] 同态加密 (Homomorphic Encryption)
 - [ ] 编码理论 (Coding Theory)
     - [ ] 纠错码 (Error-Correcting Codes)
     - [ ] 压缩编码 (Compression Coding)
     - [ ] 信道编码 (Channel Coding)
+    - [ ] 网络编码 (Network Coding)
     - [ ] 源编码 (Source Coding)
+    - [ ] 网络编码 (Network Coding)
 - [ ] 逻辑与证明理论 (Logic and Proof Theory)
+    - [ ] 类型论（Type Theory）
     - [ ] 命题逻辑 (Propositional Logic)
     - [ ] 一阶逻辑 (First-Order Logic)
     - [ ] 高阶逻辑 (Higher-Order Logic)
@@ -43,5 +53,12 @@
 
 
 
+### 5. 在编码理论 (Coding Theory) 中添加“网络编码”：
+
+
+### 6. 在逻辑与证明理论 (Logic and Proof Theory) 中添加“类型论”：
+
+
+这些建议基于该领域内一些比较新或者比较重要但未列出的主题。当然，这些都是可选的，取决于您想要的详细程度和覆盖范围。希望这些建议能对您有所帮助！
 
   
