@@ -80,6 +80,10 @@
     - [ ] 人机交互 (Human-Robot Interaction)
     - [ ] 自主导航 (Autonomous Navigation)
     - [ ] 多机器人系统 (Multi-Robot Systems)
+- [ ] 生物信息学 (Bioinformatics)
+    - [ ] 序列比对 (Sequence Alignment)
+    - [ ] 基因组学 (Genomics)
+    - [ ] 蛋白质结构预测 (Protein Structure Prediction)
 
 
 

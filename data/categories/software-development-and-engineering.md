@@ -12,9 +12,6 @@
         - [ ] 软件需求分析 (Software Requirements Analysis)
         - [ ] 设计模式 (Design Patterns)
         - [ ] 软件架构 (Software Architecture)
-    - [ ] 用户界面与用户体验 (UI/UX Design)
-        - [ ] 交互设计 (Interaction Design)
-        - [ ] 视觉设计 (Visual Design)
     - [ ] 质量保证 (Quality Assurance)
         - [ ] 代码审查 (Code Review)
         - [ ] 软件测试 (Software Testing)
@@ -76,13 +73,6 @@
         - [ ] 静态代码分析 (Static Code Analysis)
         - [ ] 动态代码分析 (Dynamic Code Analysis)
         - [ ] 代码重构 (Code Refactoring)
-    - [ ] 工具与环境 (Tools and Environments)
-        - [ ] 集成开发环境 (IDEs)
-        - [ ] 版本控制 (Version Control)
-        - [ ] 持续集成工具 (Continuous Integration Tools) 
-        - [ ] 代码仓库 (Code Repositories) 
-        - [ ] 包管理 (Package Management) 
-        - [ ] 构建工具 (Build Tools)。
 - [ ] 程序设计与开发 (Programming and Development)
     - [ ] 前端开发 (Front-end Development)
         - [ ] React
@@ -97,7 +87,21 @@
     - [ ] 移动应用开发 (Mobile App Development)
         - [ ] Android Development
         - [ ] iOS Development
+    - [ ] 游戏开发 (Game Development)
+        - [ ] 游戏设计 (Game Design)
+        - [ ] 游戏引擎 (Game Engines)
+        - [ ] 游戏物理 (Game Physics)
+        - [ ] 游戏图形与动画 (Game Graphics and Animations)
+        - [ ] 游戏音效 (Game Audio)
+        - [ ] 游戏测试 (Game Testing)
     - [ ] API开发与集成 (API Development and Integration)
+    - [ ] 工具与环境 (Tools and Environments)
+        - [ ] 集成开发环境 (IDEs)
+        - [ ] 版本控制 (Version Control)
+        - [ ] 持续集成工具 (Continuous Integration Tools) 
+        - [ ] 代码仓库 (Code Repositories) 
+        - [ ] 包管理 (Package Management) 
+        - [ ] 构建工具 (Build Tools)
 - [ ] DevOps (DevOps)
     - [ ] 部署与发布 (Deployment and Release) 
         - [ ] 自动化部署脚本 (Automated Deployment Scripts)
@@ -110,9 +114,6 @@
         - [ ] Kubernetes (Kubernetes)
 
 
-
-
-    
 
 
 

@@ -48,4 +48,8 @@
     - [ ] 一阶逻辑 (First-Order Logic)
     - [ ] 高阶逻辑 (Higher-Order Logic)
     - [ ] 模态逻辑 (Modal Logic)
+- [ ] 量子计算 (Quantum Computing)
+    - [ ] 量子算法 (Quantum Algorithms)
+    - [ ] 量子硬件 (Quantum Hardware)
+    - [ ] 量子编程 (Quantum Programming)
 
