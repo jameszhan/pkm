@@ -11,13 +11,14 @@ $ conda deactivate
 ```bash
 $ conda install django=4.1.7
 $ conda install python-dotenv
-$ conda install django-taggit
 $ conda install mysqlclient
 
 $ conda uninstall django-countries
 $ pip install django-countries
 $ conda uninstall django-reversion
 $ pip install django-reversion
+$ conda uninstall django-taggit
+$ pip install django-taggit
 ```
 
 ```sql
