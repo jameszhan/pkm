@@ -1,0 +1,8 @@
+django
+python-dotenv
+mysqlclient
+djangorestframework
+django-countries
+django-reversion
+django-taggit
+requests
