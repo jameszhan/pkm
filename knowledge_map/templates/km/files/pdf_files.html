@@ -1,0 +1,23 @@
+{% extends "layouts/km.html" %}
+
+{% block content %}
+<div class="row g-5">
+        <div class="col-md-8">
+            <h2 class="mb-1 pb-1 border-bottom">PDF文件列表</h2>
+            <nav>
+
+            </nav>
+            <article>
+                {% for file in files %}
+                    <div class="d-flex text-muted pt-3">
+                        <a href="http://localhost:8888/{{ file.file_path }}" target="_blank">{{ file.name }}</a>
+                    </div>
+                {% endfor %}
+                {% include "includes/pagination.html" with page=files %}
+            </article>
+        </div>
+        <div class="col-md-4">
+
+        </div>
+    </div>
+{% endblock %}

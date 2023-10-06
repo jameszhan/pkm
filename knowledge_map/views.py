@@ -1,8 +1,9 @@
 import logging
+from django.core.paginator import Paginator
 from django.db import transaction
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, Http404
 from django.shortcuts import render, get_object_or_404
-from .models import Category, CategoryRelation
+from .models import Category, CategoryRelation, UniqueFile
 from .functions import collect_category_tree, get_all_root_categories
 
 logger = logging.getLogger(__name__)
@@ -104,3 +105,21 @@ def api_delete_category(request, cat_slug):
     print("delete {} from parent {}".format(target.name, old_parent.name if old_parent else old_parent_slug))
     return JsonResponse({'updated_count': updated_count})
 
+
+ContentTypes = {
+    'pdf': 'application/pdf'
+}
+
+
+def unique_files(request, file_type):
+    if file_type not in ContentTypes:
+        raise Http404
+
+    files = UniqueFile.objects.filter(content_type__iexact=ContentTypes[file_type])
+    paginator = Paginator(files, 20)
+    page_number = request.GET.get('page', 1)
+    files = paginator.get_page(page_number)
+
+    return render(request, 'km/files/pdf_files.html', {
+        "files": files
+    })

@@ -141,6 +141,10 @@ USE_I18N = True
 
 USE_TZ = True
 
+# DATE_FORMAT = 'Y-m-d'
+# SHORT_DATE_FORMAT = 'm/d/Y'
+# DATETIME_FORMAT = 'Y-m-d H:i:s'
+# SHORT_DATETIME_FORMAT = 'm/d/Y P'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/

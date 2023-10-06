@@ -8,7 +8,6 @@
 
 data/*
 !data/categories/
-!data/themes/
 
 static/
 media/
