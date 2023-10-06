@@ -1,6 +1,6 @@
 # Personal Knowledge Management
 
-PKM is django project for managing your local resources.
+PKM is a django project for managing your local resources.
 
 
 ## 鸣谢
