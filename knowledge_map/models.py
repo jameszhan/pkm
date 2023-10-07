@@ -54,7 +54,7 @@ class ManagedFile(models.Model):
     file_type = models.CharField(max_length=10)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    unique_file = models.ForeignKey(UniqueFile, on_delete=models.CASCADE)
+    unique_file = models.ForeignKey(UniqueFile, to_field='digest', on_delete=models.CASCADE, related_name='managed_files', db_column='unique_file_digest')
 
     class Meta:
         db_table = 'km_managed_file'
