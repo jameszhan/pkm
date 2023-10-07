@@ -64,7 +64,75 @@ def get_pdf_metadata(filepath):
         return pdf_document.metadata
 
 
-def process_pdf_file(foldername, filename, basename, root_dir, prefix):
+def process_common_file(foldername, filename, basename, root_dir, prefix, ext):
+    catfolders = {
+        ".ppt": "ppts",
+        ".pps": "ppts",
+        ".pptx": "ppts",
+        ".chm": "chms",
+        ".epub": "epubs",
+        ".azw": "azws",
+        ".azw3": "azws",
+        ".mobi": "mobis"
+    }
+
+    if ext not in catfolders:
+        print(f'{filename} not support, support extensions is {catfolders.keys()}')
+        return
+
+    filepath = os.path.join(foldername, filename)
+    sanitized_path = filepath.replace(root_dir, prefix)
+    if ManagedFile.objects.filter(original_path=sanitized_path).exists():
+        print(f'{filepath}({sanitized_path}) have already exists')
+        return
+
+    content_type, _ = mimetypes.guess_type(filepath)
+    if not content_type and ext == '.azw3':
+        content_type = "application/vnd.amazon.mobi8-ebook"
+    if content_type:
+        with transaction.atomic():
+            created_time, modified_time, accessed_time, file_size = get_file_stats(filepath)
+            digest = sha256(filepath)
+            catfolder = catfolders[ext]
+            target_filepath = f'{catfolder}/{digest[:2]}/{digest[2:]}{ext}'
+
+            unique_file, created = UniqueFile.objects.get_or_create(
+                digest=digest,
+                defaults={
+                    'name': basename,
+                    'content_type': content_type,
+                    'file_path': target_filepath,
+                    'file_size': file_size,
+                    'created_time': created_time,
+                    'modified_time': modified_time,
+                    'accessed_time': accessed_time,
+                    'metadata': '{}',
+                }
+            )
+            if not created:
+                updated_keys = update_unique_file_if_needed(unique_file, created_time, modified_time, accessed_time, basename, file_size)
+                if updated_keys:
+                    print(f'update file {unique_file.name} with keys {updated_keys}')
+            else:
+                print(f'create file {unique_file.name} with content-type {content_type} successful')
+
+            managed_file = ManagedFile.objects.create(
+                original_path=sanitized_path,
+                file_type=ext,
+                unique_file=unique_file,
+            )
+
+            if created:
+                unique_filepath = os.path.join(TARGET_ROOT, target_filepath)
+                os.makedirs(os.path.dirname(unique_filepath), exist_ok=True)
+                os.rename(filepath, unique_filepath)
+                print(f'move file {managed_file.original_path} to {unique_file.file_path} successful')
+            else:
+                os.remove(filepath)
+                print(f'remove file {managed_file.original_path} successful')
+
+
+def process_pdf_file(foldername, filename, basename, root_dir, prefix, ext):
     filepath = os.path.join(foldername, filename)
     sanitized_path = filepath.replace(root_dir, prefix)
     if ManagedFile.objects.filter(original_path=sanitized_path).exists():
@@ -122,7 +190,15 @@ class Command(BaseCommand):
     def __init__(self):
         super().__init__()
         self.processors = {
-            '.pdf': process_pdf_file
+            '.pdf': process_pdf_file,
+            '.ppt': process_common_file,
+            '.pptx': process_common_file,
+            '.pps': process_common_file,
+            '.epub': process_common_file,
+            '.mobi': process_common_file,
+            '.azw': process_common_file,
+            '.azw3': process_common_file,
+            '.chm': process_common_file
         }
 
     def add_arguments(self, parser):
@@ -153,7 +229,7 @@ class Command(BaseCommand):
                     basename, ext = os.path.splitext(filename)
                     if ext in self.processors:
                         try:
-                            self.processors[ext](foldername, filename, basename, root_dir, prefix)
+                            self.processors[ext](foldername, filename, basename, root_dir, prefix, ext)
                         except (RuntimeError, ValueError):
                             err_msg = f'can`t process {os.path.join(foldername, filename)}, error: {traceback.format_exc()}'
                             self.stdout.write(self.style.ERROR(err_msg))

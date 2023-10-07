@@ -30,7 +30,7 @@ class CategoryRelation(models.Model):
 class UniqueFile(models.Model):
     name = models.CharField(max_length=255, null=True, blank=True)
     digest = models.CharField(max_length=64, unique=True)
-    content_type = models.CharField(max_length=32, db_index=True)
+    content_type = models.CharField(max_length=255, db_index=True)
     file_path = models.CharField(max_length=255, unique=True)
     file_size = models.BigIntegerField()
     created_time = models.DateTimeField(null=True, blank=True)
