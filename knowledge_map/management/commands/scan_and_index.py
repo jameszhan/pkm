@@ -154,7 +154,7 @@ class Command(BaseCommand):
                     if ext in self.processors:
                         try:
                             self.processors[ext](foldername, filename, basename, root_dir, prefix)
-                        except RuntimeError:
+                        except (RuntimeError, ValueError):
                             err_msg = f'can`t process {os.path.join(foldername, filename)}, error: {traceback.format_exc()}'
                             self.stdout.write(self.style.ERROR(err_msg))
 

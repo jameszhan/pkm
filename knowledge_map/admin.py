@@ -35,7 +35,7 @@ class CatalogAdmin(admin.ModelAdmin):
 @admin.register(UniqueFile)
 class UniqueFileAdmin(admin.ModelAdmin):
     list_display = ('id', 'name_with_link', 'content_type', 'human_file_size', 'created_time', 'modified_time', 'accessed_time')
-    search_fields = ['original_path']
+    search_fields = ['name', 'digest']
 
     # cd /opt/rootfs/pkm && python3 -m http.server 8888
     def name_with_link(self, obj):
