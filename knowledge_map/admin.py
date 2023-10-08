@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import admin
 from global_utils.functions import human_readable_size
 from django.utils.safestring import mark_safe
@@ -39,7 +40,7 @@ class UniqueFileAdmin(admin.ModelAdmin):
 
     # cd /opt/rootfs/pkm && python3 -m http.server 8888
     def name_with_link(self, obj):
-        return mark_safe(f'<a href="http://localhost:8888/{obj.file_path}" target="_blank">{obj.name}</a>')
+        return mark_safe(f'<a href="{settings.FILE_SERVER}/{obj.file_path}" target="_blank">{obj.name}</a>')
     name_with_link.short_description = "Name"
     name_with_link.admin_order_field = "name"
 
@@ -55,7 +56,7 @@ class ManagedFileAdmin(admin.ModelAdmin):
     search_fields = ['original_path']
 
     def path_with_link(self, obj):
-        return mark_safe(f'<a href="http://localhost:8888/{obj.unique_file.file_path}" target="_blank">{obj.original_path}</a>')
+        return mark_safe(f'<a href="{settings.FILE_SERVER}/{obj.unique_file.file_path}" target="_blank">{obj.original_path}</a>')
     path_with_link.short_description = "Original Path"
     path_with_link.admin_order_field = "original_path"
 
