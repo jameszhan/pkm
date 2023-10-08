@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('taggit', '0005_auto_20220424_2025'),
-        ('knowledge_map', '0002_alter_uniquefile_content_type'),
+        ('knowledge_map', '0002_uniquefile_managedfile'),
     ]
 
     operations = [

@@ -27,40 +27,6 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='UniqueFile',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, max_length=255, null=True)),
-                ('digest', models.CharField(max_length=64, unique=True)),
-                ('content_type', models.CharField(max_length=32)),
-                ('file_path', models.CharField(max_length=255, unique=True)),
-                ('file_size', models.BigIntegerField()),
-                ('created_time', models.DateTimeField(blank=True, null=True)),
-                ('modified_time', models.DateTimeField(blank=True, null=True)),
-                ('accessed_time', models.DateTimeField(blank=True, null=True)),
-                ('metadata', models.JSONField(blank=True, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-            ],
-            options={
-                'db_table': 'km_unique_file',
-            },
-        ),
-        migrations.CreateModel(
-            name='ManagedFile',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('original_path', models.CharField(max_length=255, unique=True)),
-                ('file_type', models.CharField(max_length=10)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('unique_file', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='knowledge_map.uniquefile')),
-            ],
-            options={
-                'db_table': 'km_managed_file',
-            },
-        ),
-        migrations.CreateModel(
             name='CategoryRelation',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
