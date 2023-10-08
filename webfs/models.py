@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from taggit.managers import TaggableManager
-from taggit.models import TagBase, TaggedItemBase
+from taggit.models import TagBase, TaggedItemBase, GenericTaggedItemBase
 from global_utils.functions import human_readable_size
 
 
@@ -15,13 +15,16 @@ class FileTag(TagBase):
         verbose_name_plural = "File Tags"
 
 
-class TaggedFile(TaggedItemBase):
-    content_object = models.ForeignKey('File', on_delete=models.CASCADE)
-    tag = models.ForeignKey(FileTag, related_name="%(app_label)s_%(class)s_items", on_delete=models.CASCADE)
+class TaggedFile(GenericTaggedItemBase):
+    tag = models.ForeignKey(
+        FileTag, related_name="%(app_label)s_%(class)s_items", on_delete=models.CASCADE
+    )
 
     class Meta:
         verbose_name = "Tagged File"
         verbose_name_plural = "Tagged Files"
+        index_together = [["content_type", "object_id"]]
+        unique_together = [["content_type", "object_id", "tag"]]
 
 
 class ManagedFile(models.Model):

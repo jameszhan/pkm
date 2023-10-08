@@ -21,6 +21,7 @@ from book.views import healthz
 urlpatterns = [
     path('healthz', healthz, name='healthz'),
     path('admin/', admin.site.urls),
+    path('webfs/', include('webfs.urls')),
     path('books/', include('book.urls')),
     path('km/', include('knowledge_map.urls')),
 ]

@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'reversion',
     'taggit',
     'global_utils',
+    'webfs',
     'book',
     'knowledge_map',
 ]
