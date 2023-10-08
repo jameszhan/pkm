@@ -33,25 +33,36 @@ class ManagedFile(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_digest = models.CharField(max_length=64)
-    unique_file = GenericForeignKey('content_type', 'object_digest')
+    object_id = models.PositiveIntegerField()
+    object_digest = models.CharField(max_length=64, db_index=True)
+    unique_file = GenericForeignKey('content_type', 'object_id')
 
 
 class BaseUniqueFile(models.Model):
+    FILE_STATUS_CHOICES = (
+        ('DELETED', '已删除'),
+        ('DISABLED', '禁止访问'),
+        ('DRAFT', '草稿'),
+        ('PUBLISHED', '已发布'),
+        ('COLLECTED', '已收藏'),
+        ('ARCHIVED', '已归档'),
+    )
+
     digest = models.CharField(max_length=64, unique=True)
     file_path = models.CharField(max_length=255, unique=True)
-    name = models.CharField(max_length=255, null=True, blank=True)
-    extension = models.CharField(max_length=10)
+    name = models.CharField(max_length=255, null=True, blank=True, db_index=True)
+    extension = models.CharField(max_length=10, db_index=True)
     content_type = models.CharField(max_length=255, db_index=True)
     file_size = models.BigIntegerField()
-    created_time = models.DateTimeField(null=True, blank=True)
-    modified_time = models.DateTimeField(null=True, blank=True)
+    created_time = models.DateTimeField(null=True, blank=True, db_index=True)
+    modified_time = models.DateTimeField(null=True, blank=True, db_index=True)
     accessed_time = models.DateTimeField(null=True, blank=True)
     metadata = models.JSONField(null=True, blank=True)
+    status = models.CharField(max_length=16, choices=FILE_STATUS_CHOICES, default='DRAFT', db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    managed_files = GenericRelation(ManagedFile, content_type_field='content_type', object_id_field='object_digest')
+    managed_files = GenericRelation(ManagedFile, content_type_field='content_type', object_id_field='object_id')
     tags = TaggableManager(through=TaggedFile)
 
     class Meta:

@@ -54,7 +54,7 @@ class TagsFilter(SimpleListFilter, metaclass=ABCMeta):
 
 class BaseUniqueFileAdmin(admin.ModelAdmin):
     list_display = ('id', 'name_with_link', 'extension', 'tag_list', 'human_file_size', 'created_time', 'modified_time',
-                    'accessed_time')
+                    'accessed_time', 'status')
     list_filter = ['modified_time']
     search_fields = ['name', 'digest']
     date_hierarchy = 'created_time'
@@ -99,7 +99,7 @@ class PDFTagsFilter(TagsFilter):
 
 @admin.register(PDFUniqueFile)
 class PDFUniqueFileAdmin(BaseUniqueFileAdmin):
-    list_filter = [PDFTagsFilter, 'modified_time']
+    list_filter = [PDFTagsFilter, 'modified_time', 'status']
 
 
 class TextTagsFilter(TagsFilter):
@@ -109,7 +109,7 @@ class TextTagsFilter(TagsFilter):
 
 @admin.register(TextUniqueFile)
 class TextUniqueFileAdmin(BaseUniqueFileAdmin):
-    list_filter = [TextTagsFilter, 'modified_time']
+    list_filter = [PDFTagsFilter, 'modified_time', 'status']
 
 
 class AudioTagsFilter(TagsFilter):
@@ -119,7 +119,7 @@ class AudioTagsFilter(TagsFilter):
 
 @admin.register(AudioUniqueFile)
 class AudioUniqueFileAdmin(BaseUniqueFileAdmin):
-    list_filter = [AudioTagsFilter, 'modified_time']
+    list_filter = [PDFTagsFilter, 'modified_time', 'status']
 
 
 class VideoTagsFilter(TagsFilter):
@@ -129,7 +129,7 @@ class VideoTagsFilter(TagsFilter):
 
 @admin.register(VideoUniqueFile)
 class VideoUniqueFileAdmin(BaseUniqueFileAdmin):
-    list_filter = [VideoTagsFilter, 'modified_time']
+    list_filter = [PDFTagsFilter, 'modified_time', 'status']
 
 
 class ImageTagsFilter(TagsFilter):
@@ -139,7 +139,7 @@ class ImageTagsFilter(TagsFilter):
 
 @admin.register(ImageUniqueFile)
 class ImageUniqueFileAdmin(BaseUniqueFileAdmin):
-    list_filter = [ImageTagsFilter, 'modified_time']
+    list_filter = [PDFTagsFilter, 'modified_time', 'status']
 
 
 class EBookTagsFilter(TagsFilter):
@@ -149,7 +149,7 @@ class EBookTagsFilter(TagsFilter):
 
 @admin.register(EBookUniqueFile)
 class EBookUniqueFileAdmin(BaseUniqueFileAdmin):
-    list_filter = [EBookTagsFilter, 'modified_time']
+    list_filter = [PDFTagsFilter, 'modified_time', 'status']
 
 
 class DocTagsFilter(TagsFilter):
@@ -159,4 +159,4 @@ class DocTagsFilter(TagsFilter):
 
 @admin.register(DocUniqueFile)
 class DocUniqueFileAdmin(BaseUniqueFileAdmin):
-    list_filter = [DocTagsFilter, 'modified_time']
+    list_filter = [PDFTagsFilter, 'modified_time', 'status']

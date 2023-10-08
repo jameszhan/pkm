@@ -5,7 +5,7 @@ from django.core.paginator import Paginator
 from django.db.models import Count, Q, Subquery, OuterRef
 from django.shortcuts import render
 from django.urls import reverse
-from .models import PDFUniqueFile, FileTag
+from .models import PDFUniqueFile, ManagedFile, FileTag
 
 
 def date_hierarchy(model, year=None, month=None, day=None):
@@ -46,7 +46,6 @@ def pdf_files(request):
     year = request.GET.get('year')
     month = request.GET.get('month')
     day = request.GET.get('day')
-
     if year and month and day:
         files = files.filter(created_time__year=year, created_time__month=month, created_time__day=day)
     elif year and month:
@@ -69,5 +68,25 @@ def pdf_files(request):
         'date_filters': date_hierarchy(PDFUniqueFile, year, month, day),
         'file_server': settings.FILE_SERVER,
         'index_url': reverse('webfs:pdf_files')
+    })
+
+
+@login_required
+def file_list(request):
+    files = ManagedFile.objects.order_by('id')
+    q = request.GET.get('q', None)
+    if q:
+        files = files.filter(Q(original_path__icontains=q) | Q(object_digest__icontains=q))
+
+    files = files.prefetch_related('unique_file')
+
+    paginator = Paginator(files, 50)
+    page_number = request.GET.get('page', 1)
+    files = paginator.get_page(page_number)
+
+    return render(request, 'webfs/files/index.html', {
+        'files': files,
+        'file_server': settings.FILE_SERVER,
+        'index_url': reverse('webfs:file_list')
     })
 

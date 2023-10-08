@@ -112,20 +112,21 @@
 {% block header %}
 <nav class="navbar navbar-expand-md navbar-default bg-secondary">
     <div class="container">
-        <a class="navbar-brand" href="{% url 'webfs:pdf_files' %}">Web FS</a>
+        <a class="navbar-brand" href="{% url 'webfs:file_list' %}">Web FS</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navContent">
             <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" href="{% url 'webfs:file_list' %}">原始文件</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'webfs:pdf_files' %}">PDF文件</a></li>
                 <li class="nav-item"><a class="nav-link" href="/admin">管理后台</a></li>
                 <li class="nav-item">
                     <a class="nav-link" href="javascript:void(0);">关于</a>
                 </li>
             </ul>
-            <form class="d-flex" action="{% url 'webfs:pdf_files' %}">
+            <form class="d-flex" action="{{ index_url }}">
                 <input class="form-control me-2" type="search" name="q" placeholder="" aria-label="Search">
                 <button class="btn btn-light text-nowrap" type="submit">搜索</button>
             </form>

@@ -3,6 +3,7 @@ import os
 from collections import deque
 from django.core.management.base import BaseCommand
 from django.db import transaction
+from django.contrib.contenttypes.models import ContentType
 from knowledge_map.models import UniqueFile
 from webfs.models import ManagedFile, PDFUniqueFile, EBookUniqueFile, DocUniqueFile
 
@@ -44,11 +45,13 @@ class Command(BaseCommand):
                         'accessed_time': unique_file.accessed_time,
                         'metadata': unique_file.metadata,
                     })
-                    self.stdout.write(self.style.SUCCESS(f'{"创建" if created else "忽略"} {uf.name}({uf.extension})-{uf.id}'))
+                    self.stdout.write(self.style.SUCCESS(f'{"创建" if created else "忽略"} {uf.name}{uf.extension}-{uf.id}'))
                     for managed_file in managed_files:
+                        # ContentType.objects.get_for_model(uf),
                         mf, c = ManagedFile.objects.get_or_create(original_path=managed_file.original_path, defaults={
                             'id': managed_file.id,
                             'unique_file': uf,
+                            'object_digest': uf.digest,
                         })
                         self.stdout.write(self.style.SUCCESS(f'{"创建" if c else "忽略"} {mf.original_path}-{mf.id}'))
             else:
