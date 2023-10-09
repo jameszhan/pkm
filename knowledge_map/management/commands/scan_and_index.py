@@ -35,9 +35,10 @@ def get_file_stats(filepath):
 def update_unique_file_if_needed(unique_file, created_time, modified_time, accessed_time, basename, file_size):
     updated_keys = []
 
-    if created_time < unique_file.created_time:
-        unique_file.created_time = created_time
-        updated_keys.append('created_time')
+    if created_time < unique_file.created_time or modified_time < unique_file.modified_time:
+        if created_time < unique_file.created_time:
+            unique_file.created_time = created_time
+            updated_keys.append('created_time')
 
         if modified_time < unique_file.modified_time:
             unique_file.modified_time = modified_time
