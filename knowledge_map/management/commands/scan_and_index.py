@@ -205,15 +205,15 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('--directories', type=str, help="directories.md file")
-        parser.add_argument('--mv-func', type=str, help="shutil.move")
+        parser.add_argument('--mvfunc', type=str, help="shutil.move")
 
     def handle(self, *args, **kwargs):
-        mv_func_arg = kwargs['mv-func']
+        mv_func_arg = kwargs['mvfunc']
         if mv_func_arg == 'shutil.move':
             global mv_func
             mv_func = shutil.move
-        directories_file = kwargs['directories']
 
+        directories_file = kwargs['directories']
         if not os.path.isfile(directories_file):
             self.stdout.write(self.style.ERROR(f'directories {directories_file} not exists'))
             return
