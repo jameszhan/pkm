@@ -42,8 +42,12 @@ class BaseUniqueFile(models.Model):
     FILE_STATUS_CHOICES = (
         ('DELETED', '已删除'),
         ('DISABLED', '禁止访问'),
+        ('LISTING', '上架中'),
+        ('LISTED', '已上架'),
+        ('DELISTED', '已下架'),
         ('DRAFT', '草稿'),
-        ('PUBLISHED', '已发布'),
+        ('FORTHCOMING', '待出版'),
+        ('PUBLISHED', '已出版'),
         ('COLLECTED', '已收藏'),
         ('ARCHIVED', '已归档'),
     )
@@ -58,7 +62,7 @@ class BaseUniqueFile(models.Model):
     modified_time = models.DateTimeField(null=True, blank=True, db_index=True)
     accessed_time = models.DateTimeField(null=True, blank=True)
     metadata = models.JSONField(null=True, blank=True)
-    status = models.CharField(max_length=16, choices=FILE_STATUS_CHOICES, default='DRAFT', db_index=True)
+    status = models.CharField(max_length=16, choices=FILE_STATUS_CHOICES, default='LISTING', db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
