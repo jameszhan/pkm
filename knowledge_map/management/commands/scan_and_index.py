@@ -1,4 +1,5 @@
 import os
+import shutil
 import hashlib
 import mimetypes
 import traceback
@@ -10,6 +11,7 @@ from knowledge_map.models import UniqueFile, ManagedFile
 
 
 TARGET_ROOT = os.getenv('FILE_ROOT', '/opt/rootfs/pkm')
+mv_func = os.rename
 
 
 def sha256(filepath, block_size=4096):
@@ -125,7 +127,7 @@ def process_common_file(foldername, filename, basename, root_dir, prefix, ext):
             if created:
                 unique_filepath = os.path.join(TARGET_ROOT, target_filepath)
                 os.makedirs(os.path.dirname(unique_filepath), exist_ok=True)
-                os.rename(filepath, unique_filepath)
+                mv_func(filepath, unique_filepath)
                 print(f'move file {managed_file.original_path} to {unique_file.file_path} successful')
             else:
                 os.remove(filepath)
@@ -176,7 +178,7 @@ def process_pdf_file(foldername, filename, basename, root_dir, prefix, ext):
             if created:
                 unique_filepath = os.path.join(TARGET_ROOT, target_filepath)
                 os.makedirs(os.path.dirname(unique_filepath), exist_ok=True)
-                os.rename(filepath, unique_filepath)
+                mv_func(filepath, unique_filepath)
                 print(f'move file {managed_file.original_path} to {unique_file.file_path} successful')
             else:
                 os.remove(filepath)
@@ -203,8 +205,13 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('--directories', type=str, help="directories.md file")
+        parser.add_argument('--mv-func', type=str, help="shutil.move")
 
     def handle(self, *args, **kwargs):
+        mv_func_arg = kwargs['mv-func']
+        if mv_func_arg == 'shutil.move':
+            global mv_func
+            mv_func = shutil.move
         directories_file = kwargs['directories']
 
         if not os.path.isfile(directories_file):
