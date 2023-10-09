@@ -9,7 +9,7 @@ from django.core.management.base import BaseCommand
 from knowledge_map.models import UniqueFile, ManagedFile
 
 
-TARGET_ROOT = f'/opt/rootfs/pkm'
+TARGET_ROOT = os.getenv('FILE_ROOT', '/opt/rootfs/pkm')
 
 
 def sha256(filepath, block_size=4096):
