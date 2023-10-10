@@ -16,6 +16,7 @@ FALLBACK_MIMES = {
     '.mobi': 'application/x-mobipocket-ebook',
     '.azw3': 'application/vnd.amazon.mobi8-ebook',
     '.epub': 'application/epub+zip',
+    '.azw': 'application/vnd.amazon.ebook',
     '.chm': 'application/vnd.ms-htmlhelp',
 }
 
