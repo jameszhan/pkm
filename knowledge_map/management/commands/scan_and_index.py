@@ -87,7 +87,7 @@ def process_common_file(foldername, filename, basename, root_dir, prefix, ext):
         ".azw": "azws",
         ".azw3": "azws",
         ".mobi": "mobis",
-        '.djvu': "djvu",
+        '.djvu': "djvus",
     }
 
     if ext not in catfolders:
