@@ -21,8 +21,6 @@ FALLBACK_MIMES = {
     '.djvu': 'image/vnd.djvu',
 }
 
-mv_func = os.rename
-
 
 def sha256(filepath, block_size=4096):
     hash_fn = hashlib.sha256()
@@ -39,7 +37,7 @@ def get_file_stats(filepath):
         created_time = datetime.fromtimestamp(stat.st_birthtime, timezone.utc)
     modified_time = datetime.fromtimestamp(stat.st_mtime, timezone.utc)
     accessed_time = datetime.fromtimestamp(stat.st_atime, timezone.utc)
-    return created_time, modified_time, accessed_time, stat.st_size
+    return created_time, modified_time, accessed_time, stat.st_size, stat.st_ino
 
 
 def update_unique_file_if_needed(unique_file, created_time, modified_time, accessed_time, basename, file_size):
@@ -77,7 +75,7 @@ def get_pdf_metadata(filepath):
         return pdf_document.metadata
 
 
-def process_common_file(foldername, filename, basename, root_dir, prefix, ext):
+def process_common_file(foldername, filename, basename, root_dir, prefix, ext, keep_origin_file):
     catfolders = {
         ".ppt": "ppts",
         ".pps": "ppts",
@@ -104,52 +102,12 @@ def process_common_file(foldername, filename, basename, root_dir, prefix, ext):
     if ext in FALLBACK_MIMES:
         content_type = FALLBACK_MIMES[ext]
     if content_type:
-        with transaction.atomic():
-            created_time, modified_time, accessed_time, file_size = get_file_stats(filepath)
-            digest = sha256(filepath)
-            catfolder = catfolders[ext]
-            target_filepath = f'{catfolder}/{digest[:2]}/{digest[2:]}{ext}'
-
-            unique_file, created = UniqueFile.objects.get_or_create(
-                digest=digest,
-                defaults={
-                    'name': basename,
-                    'content_type': content_type,
-                    'file_path': target_filepath,
-                    'file_size': file_size,
-                    'created_time': created_time,
-                    'modified_time': modified_time,
-                    'accessed_time': accessed_time,
-                    'metadata': '{}',
-                }
-            )
-            if not created:
-                updated_keys = update_unique_file_if_needed(unique_file, created_time, modified_time, accessed_time, basename, file_size)
-                if updated_keys:
-                    print(f'update file {unique_file.name} with keys {updated_keys}')
-            else:
-                print(f'create file {unique_file.name} with content-type {content_type} successful')
-
-            if created:
-                unique_filepath = os.path.join(TARGET_ROOT, target_filepath)
-                os.makedirs(os.path.dirname(unique_filepath), exist_ok=True)
-                mv_func(filepath, unique_filepath)
-                print(f'move file {sanitized_path} to {unique_file.file_path} successful')
-            else:
-                os.remove(filepath)
-                print(f'remove file {sanitized_path} successful')
-
-            managed_file = ManagedFile.objects.create(
-                original_path=sanitized_path,
-                file_type=ext,
-                unique_file=unique_file,
-            )
-            print(f'add managed file {managed_file.original_path} success')
+        do_save_fileinfo(content_type, filepath, basename, ext, catfolders[ext], sanitized_path, '{}', keep_origin_file)
     else:
         print(f'{filepath} can`t guess type, ext is {ext}')
 
 
-def process_pdf_file(foldername, filename, basename, root_dir, prefix, ext):
+def process_pdf_file(foldername, filename, basename, root_dir, prefix, ext, keep_origin_file):
     filepath = os.path.join(foldername, filename)
     sanitized_path = filepath.replace(root_dir, prefix)
     if ManagedFile.objects.filter(original_path=sanitized_path).exists():
@@ -158,46 +116,70 @@ def process_pdf_file(foldername, filename, basename, root_dir, prefix, ext):
 
     content_type, _ = mimetypes.guess_type(filepath)
     if content_type:
-        with transaction.atomic():
-            metadata = get_pdf_metadata(filepath)
-            created_time, modified_time, accessed_time, file_size = get_file_stats(filepath)
-            digest = sha256(filepath)
-            target_filepath = f'pdfs/{digest[:2]}/{digest[2:]}.pdf'
+        metadata = get_pdf_metadata(filepath)
+        do_save_fileinfo(content_type, filepath, basename, ext, 'pdfs', sanitized_path, metadata, keep_origin_file)
 
-            unique_file, created = UniqueFile.objects.get_or_create(
-                digest=digest,
-                defaults={
-                    'name': basename,
-                    'content_type': content_type,
-                    'file_path': target_filepath,
-                    'file_size': file_size,
-                    'created_time': created_time,
-                    'modified_time': modified_time,
-                    'accessed_time': accessed_time,
-                    'metadata': metadata,
-                }
-            )
-            if not created:
-                updated_keys = update_unique_file_if_needed(unique_file, created_time, modified_time, accessed_time, basename, file_size)
-                if updated_keys:
-                    print(f'update file {unique_file.name} with keys {updated_keys}')
+
+def do_save_fileinfo(mimetype, filepath, basename, ext, catfolder, sanitized_path, metadata, keep_origin_file=False):
+    with transaction.atomic():
+        created_time, modified_time, accessed_time, file_size, src_inode = get_file_stats(filepath)
+        digest = sha256(filepath)
+        target_filepath = f'{catfolder}/{digest[:2]}/{digest[2:]}{ext}'
+
+        unique_file, created = UniqueFile.objects.get_or_create(
+            digest=digest,
+            defaults={
+                'name': basename,
+                'content_type': mimetype,
+                'file_path': target_filepath,
+                'file_size': file_size,
+                'created_time': created_time,
+                'modified_time': modified_time,
+                'accessed_time': accessed_time,
+                'metadata': metadata,
+            }
+        )
+
+        if not created:
+            updated_keys = update_unique_file_if_needed(unique_file, created_time, modified_time, accessed_time, basename, file_size)
+            if updated_keys:
+                print(f'update file {unique_file.name} with keys {updated_keys}')
+        else:
+            print(f'create file {unique_file.name} with content-type {mimetype} successful')
+
+        if keep_origin_file:
+            unique_filepath = os.path.join(TARGET_ROOT, target_filepath)
+            if os.path.exists(unique_filepath):
+                dst_inode = os.stat(unique_filepath).st_ino
+                if src_inode != dst_inode:
+                    if updated_keys:
+                        os.unlink(unique_filepath)
+                        os.link(filepath, unique_filepath)
+                        print(f'link file {filepath} to {unique_filepath} successful')
+                    else:
+                        os.unlink(filepath)
+                        os.link(unique_filepath, filepath)
+                        print(f'link file {unique_filepath} to {filepath} successful')
             else:
-                print(f'create file {unique_file.name} with content-type {content_type} successful')
-
-            managed_file = ManagedFile.objects.create(
-                original_path=sanitized_path,
-                file_type='.pdf',
-                unique_file=unique_file,
-            )
-
+                os.makedirs(os.path.dirname(unique_filepath), exist_ok=True)
+                os.link(filepath, unique_filepath)
+                print(f'link file {filepath} to {unique_filepath} successful')
+        else:
             if created:
                 unique_filepath = os.path.join(TARGET_ROOT, target_filepath)
                 os.makedirs(os.path.dirname(unique_filepath), exist_ok=True)
-                mv_func(filepath, unique_filepath)
-                print(f'move file {managed_file.original_path} to {unique_file.file_path} successful')
+                shutil.move(filepath, unique_filepath)
+                print(f'move file {sanitized_path} to {unique_file.file_path} successful')
             else:
                 os.remove(filepath)
-                print(f'remove file {managed_file.original_path} successful')
+                print(f'remove file {sanitized_path} successful')
+
+        managed_file = ManagedFile.objects.create(
+            original_path=sanitized_path,
+            file_type=ext,
+            unique_file=unique_file,
+        )
+        print(f'add managed file {managed_file.original_path} success')
 
 
 # python3 manage.py scan_and_index --directories data/rootfs/directories.md
@@ -221,18 +203,15 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('--directories', type=str, help="directories.md file")
-        parser.add_argument('--mvfunc', type=str, help="shutil.move")
+        parser.add_argument('--keep-origin-file', type=bool, help="Keep Origin File")
 
     def handle(self, *args, **kwargs):
-        mv_func_arg = kwargs['mvfunc']
-        if mv_func_arg == 'shutil.move':
-            global mv_func
-            mv_func = shutil.move
-
         directories_file = kwargs['directories']
         if not os.path.isfile(directories_file):
             self.stdout.write(self.style.ERROR(f'directories {directories_file} not exists'))
             return
+
+        keep_origin_file = kwargs['keep_origin_file']
 
         directories = {}
         with open(directories_file, 'r', encoding='UTF-8') as f:
@@ -252,7 +231,7 @@ class Command(BaseCommand):
                     basename, ext = os.path.splitext(filename)
                     if ext in self.processors:
                         try:
-                            self.processors[ext](foldername, filename, basename, root_dir, prefix, ext)
+                            self.processors[ext](foldername, filename, basename, root_dir, prefix, ext, keep_origin_file)
                         except (RuntimeError, ValueError):
                             err_msg = f'can`t process {os.path.join(foldername, filename)}, error: {traceback.format_exc()}'
                             self.stdout.write(self.style.ERROR(err_msg))
