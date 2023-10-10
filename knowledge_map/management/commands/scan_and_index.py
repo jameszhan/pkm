@@ -11,6 +11,14 @@ from knowledge_map.models import UniqueFile, ManagedFile
 
 
 TARGET_ROOT = os.getenv('FILE_ROOT', '/opt/rootfs/pkm')
+FALLBACK_MIMES = {
+    '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    '.mobi': 'application/x-mobipocket-ebook',
+    '.azw3': 'application/vnd.amazon.mobi8-ebook',
+    '.epub': 'application/epub+zip',
+    '.chm': 'application/vnd.ms-htmlhelp',
+}
+
 mv_func = os.rename
 
 
@@ -90,8 +98,8 @@ def process_common_file(foldername, filename, basename, root_dir, prefix, ext):
         return
 
     content_type, _ = mimetypes.guess_type(filepath)
-    if not content_type and ext == '.azw3':
-        content_type = "application/vnd.amazon.mobi8-ebook"
+    if ext in FALLBACK_MIMES:
+        content_type = FALLBACK_MIMES[ext]
     if content_type:
         with transaction.atomic():
             created_time, modified_time, accessed_time, file_size = get_file_stats(filepath)
