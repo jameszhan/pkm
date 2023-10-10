@@ -133,6 +133,8 @@ def process_common_file(foldername, filename, basename, root_dir, prefix, ext):
             else:
                 os.remove(filepath)
                 print(f'remove file {managed_file.original_path} successful')
+    else:
+        print(f'{filepath} can`t guess type')
 
 
 def process_pdf_file(foldername, filename, basename, root_dir, prefix, ext):
@@ -241,8 +243,8 @@ class Command(BaseCommand):
                         except (RuntimeError, ValueError):
                             err_msg = f'can`t process {os.path.join(foldername, filename)}, error: {traceback.format_exc()}'
                             self.stdout.write(self.style.ERROR(err_msg))
-                    else:
-                        self.stdout.write(self.style.WARNING(f'{ext} not support, filepath: {filepath}'))
+                    # else:
+                    #     self.stdout.write(self.style.WARNING(f'{ext} not support, filepath: {filepath}'))
 
 
 
