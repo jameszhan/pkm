@@ -214,7 +214,8 @@ class Command(BaseCommand):
             '.mobi': process_common_file,
             '.azw': process_common_file,
             '.azw3': process_common_file,
-            '.chm': process_common_file
+            '.chm': process_common_file,
+            '.djvu': process_common_file,
         }
 
     def add_arguments(self, parser):
@@ -254,9 +255,9 @@ class Command(BaseCommand):
                         except (RuntimeError, ValueError):
                             err_msg = f'can`t process {os.path.join(foldername, filename)}, error: {traceback.format_exc()}'
                             self.stdout.write(self.style.ERROR(err_msg))
-                    else:
-                        if filename.endswith("djvu"):
-                            self.stdout.write(self.style.WARNING(f'{ext} not support, filepath: {filepath}'))
+                    # else:
+                    #     if filename.endswith("djvu"):
+                    #         self.stdout.write(self.style.WARNING(f'{ext} not support, filepath: {filepath}'))
 
 
 
