@@ -23,6 +23,7 @@ class Command(BaseCommand):
             "application/vnd.amazon.ebook": EBookUniqueFile,
             "application/x-mobipocket-ebook": EBookUniqueFile,
             "application/vnd.amazon.mobi8-ebook": EBookUniqueFile,
+            "image/vnd.djvu": EBookUniqueFile,
         }
 
     def handle(self, *args, **options):
