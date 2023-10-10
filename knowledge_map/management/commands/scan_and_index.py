@@ -18,6 +18,7 @@ FALLBACK_MIMES = {
     '.epub': 'application/epub+zip',
     '.azw': 'application/vnd.amazon.ebook',
     '.chm': 'application/vnd.ms-htmlhelp',
+    '.djvu': 'image/vnd.djvu',
 }
 
 mv_func = os.rename
@@ -85,7 +86,8 @@ def process_common_file(foldername, filename, basename, root_dir, prefix, ext):
         ".epub": "epubs",
         ".azw": "azws",
         ".azw3": "azws",
-        ".mobi": "mobis"
+        ".mobi": "mobis",
+        '.djvu': "djvu",
     }
 
     if ext not in catfolders:
