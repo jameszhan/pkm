@@ -134,7 +134,7 @@ def process_common_file(foldername, filename, basename, root_dir, prefix, ext):
                 os.remove(filepath)
                 print(f'remove file {managed_file.original_path} successful')
     else:
-        print(f'{filepath} can`t guess type')
+        print(f'{filepath} can`t guess type, ext is {ext}')
 
 
 def process_pdf_file(foldername, filename, basename, root_dir, prefix, ext):
