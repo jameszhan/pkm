@@ -241,6 +241,8 @@ class Command(BaseCommand):
                         except (RuntimeError, ValueError):
                             err_msg = f'can`t process {os.path.join(foldername, filename)}, error: {traceback.format_exc()}'
                             self.stdout.write(self.style.ERROR(err_msg))
+                    else:
+                        self.stdout.write(self.style.WARNING(f'{ext} not support, filepath: {filepath}'))
 
 
 
