@@ -130,20 +130,21 @@ def process_common_file(foldername, filename, basename, root_dir, prefix, ext):
             else:
                 print(f'create file {unique_file.name} with content-type {content_type} successful')
 
+            if created:
+                unique_filepath = os.path.join(TARGET_ROOT, target_filepath)
+                os.makedirs(os.path.dirname(unique_filepath), exist_ok=True)
+                mv_func(filepath, unique_filepath)
+                print(f'move file {sanitized_path} to {unique_file.file_path} successful')
+            else:
+                os.remove(filepath)
+                print(f'remove file {sanitized_path} successful')
+
             managed_file = ManagedFile.objects.create(
                 original_path=sanitized_path,
                 file_type=ext,
                 unique_file=unique_file,
             )
-
-            if created:
-                unique_filepath = os.path.join(TARGET_ROOT, target_filepath)
-                os.makedirs(os.path.dirname(unique_filepath), exist_ok=True)
-                mv_func(filepath, unique_filepath)
-                print(f'move file {managed_file.original_path} to {unique_file.file_path} successful')
-            else:
-                os.remove(filepath)
-                print(f'remove file {managed_file.original_path} successful')
+            print(f'add managed file {managed_file.original_path} success')
     else:
         print(f'{filepath} can`t guess type, ext is {ext}')
 
