@@ -59,9 +59,9 @@ INSTALLED_APPS = [
     'reversion',
     'taggit',
     'global_utils',
+    'knowledge_map',
     'webfs',
     'book',
-    'knowledge_map',
 ]
 
 MIDDLEWARE = [

@@ -4,6 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 from taggit.managers import TaggableManager
 from taggit.models import TagBase, TaggedItemBase, GenericTaggedItemBase
 from global_utils.functions import human_readable_size
+from knowledge_map.models import Category
 
 
 class FileTag(TagBase):
@@ -52,8 +53,28 @@ class BaseUniqueFile(models.Model):
         ('ARCHIVED', '已归档'),
     )
 
+    RESOURCE_TYPE_CHOICES = (
+        ('BOOK', '图书'),
+        ('PAPER', '论文'),
+        ('SLIDES', '演讲稿'),
+        ('LECTURE', '课件'),
+        ('SPREADSHEET', '表格'),
+        ('NOTES', '笔记'),
+        ('CODE', '代码'),
+        ('PHOTO', '照片'),
+        ('IMAGE', '图片'),
+        ('MUSIC', '音乐'),
+        ('AUDIO', '音频'),
+        ('MOVIE', '影片'),
+        ('VIDEO', '视频'),
+        ('MANUAL', '手册'),
+        ('DOCUMENT', '文档'),
+        ('OTHER', '其他资源')
+    )
+
     digest = models.CharField(max_length=64, unique=True)
     file_path = models.CharField(max_length=255, unique=True)
+    resource_type = models.CharField(max_length=16, choices=RESOURCE_TYPE_CHOICES, default='OTHER', db_index=True)
     name = models.CharField(max_length=255, null=True, blank=True, db_index=True)
     extension = models.CharField(max_length=10, db_index=True)
     content_type = models.CharField(max_length=255, db_index=True)
@@ -63,11 +84,12 @@ class BaseUniqueFile(models.Model):
     accessed_time = models.DateTimeField(null=True, blank=True)
     metadata = models.JSONField(null=True, blank=True)
     status = models.CharField(max_length=16, choices=FILE_STATUS_CHOICES, default='LISTING', db_index=True)
+    categories = models.ManyToManyField(Category)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    managed_files = GenericRelation(ManagedFile, content_type_field='content_type', object_id_field='object_id')
     tags = TaggableManager(through=TaggedFile)
+    managed_files = GenericRelation(ManagedFile, content_type_field='content_type', object_id_field='object_id')
 
     class Meta:
         abstract = True
