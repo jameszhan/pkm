@@ -27,7 +27,7 @@ class Command(BaseCommand):
         }
 
     def handle(self, *args, **options):
-        for unique_file in UniqueFile.objects.prefetch_related('managed_files').order_by('id'):
+        for unique_file in UniqueFile.objects.order_by('id'):
             mime = unique_file.content_type
             _, ext = os.path.splitext(unique_file.file_path)
             if mime in self.model_types:
@@ -46,7 +46,26 @@ class Command(BaseCommand):
                         'accessed_time': unique_file.accessed_time,
                         'metadata': unique_file.metadata,
                     })
-                    self.stdout.write(self.style.SUCCESS(f'{"创建" if created else "忽略"} {uf.name}{uf.extension}-{uf.id}'))
+
+                    if not created:
+                        updated_keys = []
+                        if unique_file.created_time < uf.created_time:
+                            uf.created_time = unique_file.created_time
+                            updated_keys.append('created_time')
+
+                        if unique_file.modified_time < uf.modified_time:
+                            uf.modified_time = unique_file.modified_time
+                            updated_keys.append('modified_time')
+
+                        if updated_keys:
+                            if uf.name != unique_file.name:
+                                uf.name = unique_file.name
+                                updated_keys.append('name')
+
+                            print(f'update file {uf.name} with keys {updated_keys}')
+                            uf.save(update_fields=updated_keys)
+
+                    self.stdout.write(self.style.SUCCESS(f'[UniqueFile] {"创建" if created else "忽略"} {uf.name}{uf.extension}-{uf.id}'))
                     for managed_file in managed_files:
                         # ContentType.objects.get_for_model(uf),
                         mf, c = ManagedFile.objects.get_or_create(original_path=managed_file.original_path, defaults={
@@ -54,7 +73,7 @@ class Command(BaseCommand):
                             'unique_file': uf,
                             'object_digest': uf.digest,
                         })
-                        self.stdout.write(self.style.SUCCESS(f'{"创建" if c else "忽略"} {mf.original_path}-{mf.id}'))
+                        self.stdout.write(self.style.SUCCESS(f'[ManagedFile] {"创建" if c else "忽略"} {mf.original_path}-{mf.id}'))
             else:
                 self.stdout.write(self.style.ERROR(f'({unique_file.name}{ext}) Content Type {mime} is not supported'))
 
