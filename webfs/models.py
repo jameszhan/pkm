@@ -54,27 +54,29 @@ class BaseUniqueFile(models.Model):
     )
 
     RESOURCE_TYPE_CHOICES = (
-        ('BOOK', '图书'),
-        ('PAPER', '论文'),
+        ('BOOKS', '图书'),
+        ('PERIODICALS', '期刊'),
+        ('MANUALS', '手册'),
+        ('EDUCATIONAL_MATERIALS', '教育材料'),
+        ('REPORTS', '报告'),
+        ('PROMOTIONS', '宣传材料'),
+        ('ONLINE_CONTENT', '在线内容'),
         ('SLIDES', '演讲稿'),
-        ('LECTURE', '课件'),
-        ('SPREADSHEET', '表格'),
+        ('SPREADSHEETS', '表格'),
         ('NOTES', '笔记'),
         ('CODE', '代码'),
-        ('PHOTO', '照片'),
-        ('IMAGE', '图片'),
+        ('PHOTOS', '照片'),
+        ('IMAGES', '图片'),
         ('MUSIC', '音乐'),
         ('AUDIO', '音频'),
-        ('MOVIE', '影片'),
         ('VIDEO', '视频'),
-        ('MANUAL', '手册'),
-        ('DOCUMENT', '文档'),
+        ('MOVIES', '影片'),
         ('OTHER', '其他资源')
     )
 
     digest = models.CharField(max_length=64, unique=True)
     file_path = models.CharField(max_length=255, unique=True)
-    resource_type = models.CharField(max_length=16, choices=RESOURCE_TYPE_CHOICES, default='OTHER', db_index=True)
+    resource_type = models.CharField(max_length=32, choices=RESOURCE_TYPE_CHOICES, default='OTHER', db_index=True)
     name = models.CharField(max_length=255, null=True, blank=True, db_index=True)
     extension = models.CharField(max_length=10, db_index=True)
     content_type = models.CharField(max_length=255, db_index=True)

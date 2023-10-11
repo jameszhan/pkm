@@ -99,17 +99,7 @@ class PDFTagsFilter(TagsFilter):
 
 @admin.register(PDFUniqueFile)
 class PDFUniqueFileAdmin(BaseUniqueFileAdmin):
-    list_filter = [PDFTagsFilter, 'modified_time', 'status']
-
-
-class TextTagsFilter(TagsFilter):
-    def get_model_type(self):
-        return TextUniqueFile
-
-
-@admin.register(TextUniqueFile)
-class TextUniqueFileAdmin(BaseUniqueFileAdmin):
-    list_filter = [PDFTagsFilter, 'modified_time', 'status']
+    list_filter = [PDFTagsFilter, 'categories', 'status', 'resource_type', 'modified_time']
 
 
 class AudioTagsFilter(TagsFilter):
@@ -119,7 +109,7 @@ class AudioTagsFilter(TagsFilter):
 
 @admin.register(AudioUniqueFile)
 class AudioUniqueFileAdmin(BaseUniqueFileAdmin):
-    list_filter = [PDFTagsFilter, 'modified_time', 'status']
+    list_filter = [AudioTagsFilter, 'categories', 'content_type', 'status', 'resource_type', 'modified_time']
 
 
 class VideoTagsFilter(TagsFilter):
@@ -129,7 +119,7 @@ class VideoTagsFilter(TagsFilter):
 
 @admin.register(VideoUniqueFile)
 class VideoUniqueFileAdmin(BaseUniqueFileAdmin):
-    list_filter = [PDFTagsFilter, 'modified_time', 'status']
+    list_filter = [VideoTagsFilter, 'categories', 'content_type', 'status', 'resource_type', 'modified_time']
 
 
 class ImageTagsFilter(TagsFilter):
@@ -139,7 +129,7 @@ class ImageTagsFilter(TagsFilter):
 
 @admin.register(ImageUniqueFile)
 class ImageUniqueFileAdmin(BaseUniqueFileAdmin):
-    list_filter = [PDFTagsFilter, 'modified_time', 'status']
+    list_filter = [ImageTagsFilter, 'categories', 'content_type', 'status', 'resource_type', 'modified_time']
 
 
 class EBookTagsFilter(TagsFilter):
@@ -149,7 +139,7 @@ class EBookTagsFilter(TagsFilter):
 
 @admin.register(EBookUniqueFile)
 class EBookUniqueFileAdmin(BaseUniqueFileAdmin):
-    list_filter = [PDFTagsFilter, 'modified_time', 'status']
+    list_filter = [EBookTagsFilter, 'categories', 'content_type', 'status', 'resource_type', 'modified_time']
 
 
 class DocTagsFilter(TagsFilter):
@@ -159,4 +149,15 @@ class DocTagsFilter(TagsFilter):
 
 @admin.register(DocUniqueFile)
 class DocUniqueFileAdmin(BaseUniqueFileAdmin):
-    list_filter = [PDFTagsFilter, 'modified_time', 'status']
+    list_filter = [DocTagsFilter, 'categories', 'content_type', 'status', 'resource_type', 'modified_time']
+
+
+class TextTagsFilter(TagsFilter):
+    def get_model_type(self):
+        return TextUniqueFile
+
+
+@admin.register(TextUniqueFile)
+class TextUniqueFileAdmin(BaseUniqueFileAdmin):
+    list_filter = [TextTagsFilter, 'categories', 'content_type', 'status', 'resource_type', 'modified_time']
+

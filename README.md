@@ -7,4 +7,4 @@ PKM is a django project for managing your local resources.
 
 Thank [JetBrains](https://www.jetbrains.com/) for providing tools in developing.
 
-![JetBrains Logos](images/jb_beam.png)
+![JetBrains Logos](assets/images/jb_beam.png)
