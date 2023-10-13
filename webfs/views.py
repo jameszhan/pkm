@@ -5,7 +5,7 @@ from django.core.paginator import Paginator
 from django.db.models import Count, Q, Subquery, OuterRef
 from django.shortcuts import render
 from django.urls import reverse
-from .models import PDFUniqueFile, ManagedFile, FileTag
+from .models import Series, FileTag, PDFUniqueFile, ManagedFile
 
 
 def date_hierarchy(model, year=None, month=None, day=None):
@@ -26,13 +26,16 @@ def date_hierarchy(model, year=None, month=None, day=None):
 
 
 @login_required
-def pdf_files(request):
+def pdf_files(request, series_slug=None):
     files = (PDFUniqueFile.objects.prefetch_related('managed_files').prefetch_related('tags').all()
              .order_by('-modified_time'))
 
     q = request.GET.get('q', None)
     if q:
         files = files.filter(Q(name__icontains=q) | Q(digest__icontains=q))
+
+    if series_slug is not None:
+        files = files.filter(series__slug__iexact=series_slug)
 
     tag_slugs = request.GET.getlist('tag')
     if tag_slugs:
@@ -60,13 +63,16 @@ def pdf_files(request):
         webfs_taggedfile_items__content_type=ContentType.objects.get_for_model(PDFUniqueFile)
     ).annotate(file_count=Count('webfs_taggedfile_items')).filter(file_count__gt=0).order_by('-file_count')
 
+    series_list = Series.objects.order_by('slug').all()
+
     return render(request, 'webfs/uniquefiles/index.html', {
         'tagged_tags': tagged_tags,
         'files': files,
         'tags': tags,
+        'series_list': series_list,
         'date_filters': date_hierarchy(PDFUniqueFile, year, month, day),
         'file_server': settings.FILE_SERVER,
-        'index_url': reverse('webfs:pdf_files')
+        'index_url': reverse('webfs:pdf_files'),
     })
 
 

@@ -47,7 +47,7 @@ class Series(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.name}({self.slug})"
+        return f"{self.name}"
 
 
 class BaseUniqueFile(models.Model):

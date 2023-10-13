@@ -70,6 +70,25 @@
         </div>
         <div class="col-md-3">
             <aside class="mt-3">
+                <details class="box" data-filter-title="丛书" open>
+                    <summary class="title">
+                        <span>
+                            <i class="bi-bookshelf"></i>
+                            丛书
+                        </span>
+                    </summary>
+                    <ul class="list-inline mt-2">
+                    {% for series in series_list %}
+                    <li class="list-inline-item tag">
+                        <a href="{{ index_url }}/{{ series.slug }}">
+                            {{ series.name }}
+                        </a>
+                    </li>
+                    {% empty %}
+                    There are no series yet.
+                    {% endfor %}
+                    </ul>
+                </details>
                 <details class="box" data-filter-title="标签" open>
                     <summary class="title">
                         <span>
