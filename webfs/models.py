@@ -51,19 +51,6 @@ class Series(models.Model):
 
 
 class BaseUniqueFile(models.Model):
-    FILE_STATUS_CHOICES = (
-        ('DELETED', '已删除'),
-        ('DISABLED', '禁止访问'),
-        ('LISTING', '上架中'),
-        ('LISTED', '已上架'),
-        ('DELISTED', '已下架'),
-        ('DRAFT', '草稿'),
-        ('FORTHCOMING', '待出版'),
-        ('PUBLISHED', '已出版'),
-        ('COLLECTED', '已收藏'),
-        ('ARCHIVED', '已归档'),
-    )
-
     RESOURCE_TYPE_CHOICES = (
         ('BOOKS', '图书'),
         ('PERIODICALS', '期刊'),
@@ -83,6 +70,19 @@ class BaseUniqueFile(models.Model):
         ('VIDEO', '视频'),
         ('MOVIES', '影片'),
         ('OTHER', '其他资源')
+    )
+
+    FILE_STATUS_CHOICES = (
+        ('DELETED', '已删除'),
+        ('DISABLED', '禁止访问'),
+        ('LISTING', '上架中'),
+        ('LISTED', '已上架'),
+        ('DELISTED', '已下架'),
+        ('DRAFT', '草稿'),
+        ('FORTHCOMING', '待出版'),
+        ('PUBLISHED', '已出版'),
+        ('COLLECTED', '已收藏'),
+        ('ARCHIVED', '已归档'),
     )
 
     digest = models.CharField(max_length=64, unique=True)
