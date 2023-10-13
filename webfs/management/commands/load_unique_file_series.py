@@ -21,10 +21,14 @@ class Command(BaseCommand):
 
         i = 0
         for managed_file in ManagedFile.objects.prefetch_related('unique_file').order_by('id'):
-            print(managed_file.unique_file)
+            for name, series in series_map.items():
+                if name in managed_file.original_path:
+                    print(managed_file.unique_file, name)
+                    i += 1
+                    break
             if i > 10:
                 break
-            i += 1
+
 
 
         # for unique_file in UniqueFile.objects.order_by('id'):
