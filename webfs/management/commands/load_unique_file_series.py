@@ -19,8 +19,12 @@ class Command(BaseCommand):
         for series in Series.objects.all():
             series_map[series.name] = series
 
-        print(series_map)
-        # for managed_file in ManagedFile.objects.order_by('id'):
+        i = 0
+        for managed_file in ManagedFile.objects.prefetch_related('unique_file').order_by('id'):
+            print(managed_file.unique_file)
+            if i > 10:
+                break
+            i += 1
 
 
         # for unique_file in UniqueFile.objects.order_by('id'):
