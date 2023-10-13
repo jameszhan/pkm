@@ -39,6 +39,17 @@ class ManagedFile(models.Model):
     unique_file = GenericForeignKey('content_type', 'object_id')
 
 
+class Series(models.Model):
+    name = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=255, unique=True)
+    topic = models.TextField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.name}({self.slug})"
+
+
 class BaseUniqueFile(models.Model):
     FILE_STATUS_CHOICES = (
         ('DELETED', '已删除'),
@@ -87,6 +98,7 @@ class BaseUniqueFile(models.Model):
     metadata = models.JSONField(null=True, blank=True)
     status = models.CharField(max_length=16, choices=FILE_STATUS_CHOICES, default='LISTING', db_index=True)
     categories = models.ManyToManyField(Category)
+    series = models.ForeignKey(Series, on_delete=models.SET_NULL, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

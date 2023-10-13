@@ -7,8 +7,8 @@ from django.utils.safestring import mark_safe
 from taggit.forms import TagWidget
 from taggit.managers import TaggableManager
 from global_utils.functions import human_readable_size
-from .models import (FileTag, TaggedFile, ManagedFile, PDFUniqueFile, TextUniqueFile, ImageUniqueFile, AudioUniqueFile,
-                     VideoUniqueFile, EBookUniqueFile, DocUniqueFile)
+from .models import (FileTag, TaggedFile, ManagedFile, Series, PDFUniqueFile, TextUniqueFile, ImageUniqueFile,
+                     AudioUniqueFile, VideoUniqueFile, EBookUniqueFile, DocUniqueFile)
 
 
 class TaggedFileInline(admin.StackedInline):
@@ -54,7 +54,7 @@ class TagsFilter(SimpleListFilter, metaclass=ABCMeta):
 
 class BaseUniqueFileAdmin(admin.ModelAdmin):
     list_display = ('id', 'name_with_link', 'extension', 'tag_list', 'human_file_size', 'created_time', 'modified_time',
-                    'accessed_time', 'status')
+                    'series', 'status')
     list_filter = ['modified_time']
     search_fields = ['name', 'digest']
     date_hierarchy = 'modified_time'
@@ -99,7 +99,7 @@ class PDFTagsFilter(TagsFilter):
 
 @admin.register(PDFUniqueFile)
 class PDFUniqueFileAdmin(BaseUniqueFileAdmin):
-    list_filter = [PDFTagsFilter, 'categories', 'status', 'resource_type', 'modified_time']
+    list_filter = [PDFTagsFilter, 'series', 'categories', 'status', 'resource_type', 'modified_time']
 
 
 class AudioTagsFilter(TagsFilter):
@@ -160,4 +160,10 @@ class TextTagsFilter(TagsFilter):
 @admin.register(TextUniqueFile)
 class TextUniqueFileAdmin(BaseUniqueFileAdmin):
     list_filter = [TextTagsFilter, 'categories', 'content_type', 'status', 'resource_type', 'modified_time']
+
+
+@admin.register(Series)
+class SeriesAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'slug')
+    search_fields = ['name']
 
