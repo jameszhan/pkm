@@ -119,6 +119,7 @@ def process_pdf_file(foldername, filename, basename, root_dir, prefix, ext, keep
     sanitized_path = filepath.replace(root_dir, prefix)
     managed_file = ManagedFile.objects.filter(original_path=sanitized_path).first()
     if managed_file is not None:
+        print(dir(managed_file))
         print(f'{filepath}({sanitized_path})[{managed_file.unique_file_digest}] have already exists')
         return
 
