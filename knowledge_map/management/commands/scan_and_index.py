@@ -94,8 +94,15 @@ def process_common_file(foldername, filename, basename, root_dir, prefix, ext, k
 
     filepath = os.path.join(foldername, filename)
     sanitized_path = filepath.replace(root_dir, prefix)
-    if ManagedFile.objects.filter(original_path=sanitized_path).exists():
-        print(f'{filepath}({sanitized_path}) have already exists')
+    managed_file = ManagedFile.objects.filter(original_path=sanitized_path).first()
+    if managed_file is not None:
+        print(f'{filepath}({sanitized_path})[{managed_file.unique_file_digest}] have already exists')
+        # digest = sha256(filepath)
+        # if digest == managed_file.unique_file_digest:
+        #     os.remove(filepath)
+        #     print(f'remove file {sanitized_path} successful')
+        # else:
+        #     print(f'[ERROR] {filepath}({sanitized_path}) have already exists, but not consistent')
         return
 
     content_type, _ = mimetypes.guess_type(filepath)
@@ -110,8 +117,9 @@ def process_common_file(foldername, filename, basename, root_dir, prefix, ext, k
 def process_pdf_file(foldername, filename, basename, root_dir, prefix, ext, keep_origin_file):
     filepath = os.path.join(foldername, filename)
     sanitized_path = filepath.replace(root_dir, prefix)
-    if ManagedFile.objects.filter(original_path=sanitized_path).exists():
-        print(f'{filepath}({sanitized_path}) have already exists')
+    managed_file = ManagedFile.objects.filter(original_path=sanitized_path).first()
+    if managed_file is not None:
+        print(f'{filepath}({sanitized_path})[{managed_file.unique_file_digest}] have already exists')
         return
 
     content_type, _ = mimetypes.guess_type(filepath)
