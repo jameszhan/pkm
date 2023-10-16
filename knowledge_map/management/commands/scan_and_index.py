@@ -123,7 +123,7 @@ def process_pdf_file(foldername, filename, basename, root_dir, prefix, ext, keep
             print(f'remove file {sanitized_path}({managed_file.unique_file.digest}) successful')
             os.remove(filepath)
         else:
-            print(f'[ERROR] {filepath}({sanitized_path}) have already exists, but not consistent')
+            print(f'[ERROR] {filepath}({managed_file.unique_file.file_size}-{os.stat(filepath).st_size}) have already exists, but not consistent')
         return
 
     content_type, _ = mimetypes.guess_type(filepath)
