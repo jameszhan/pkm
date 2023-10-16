@@ -245,7 +245,7 @@ class Command(BaseCommand):
                         try:
                             self.processors[ext](foldername, filename, basename, root_dir, prefix, ext, keep_origin_file)
                         except (RuntimeError, ValueError):
-                            err_msg = f'can`t process {os.path.join(foldername, filename)}, error: {traceback.format_exc()}'
+                            err_msg = f'can`t process {filepath}({os.stat(filepath).st_size}), error: {traceback.format_exc()}'
                             self.stdout.write(self.style.ERROR(err_msg))
                     # else:
                     #     if filename.endswith("djvu"):
