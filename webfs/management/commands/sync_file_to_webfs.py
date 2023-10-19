@@ -24,7 +24,7 @@ class Command(BaseCommand):
             "application/x-mobipocket-ebook": EBookUniqueFile,
             "application/vnd.amazon.mobi8-ebook": EBookUniqueFile,
             "image/vnd.djvu": EBookUniqueFile,
-            "application/vnd.pdg": EBookUniqueFile,
+            # "application/vnd.pdg": EBookUniqueFile,
             "image/x-ms-bmp": ImageUniqueFile,
             "image/jpeg": ImageUniqueFile,
             "image/gif": ImageUniqueFile,
@@ -79,7 +79,9 @@ class Command(BaseCommand):
                             'unique_file': uf,
                             'object_digest': uf.digest,
                         })
-                        self.stdout.write(self.style.SUCCESS(f'[ManagedFile] {"创建" if c else "忽略"} {mf.original_path}-{mf.id}'))
+                        # self.stdout.write(self.style.SUCCESS(f'[ManagedFile] {"创建" if c else "忽略"} {mf.original_path}-{mf.id}'))
+                        if not c and mf.id != managed_file.id:
+                            self.stdout.write(self.style.WARNING(f'[ManagedFile] IGNORE {managed_file.id} WITH {mf.id}'))
             else:
                 self.stdout.write(self.style.ERROR(f'({unique_file.name}{ext}) Content Type {mime} is not supported'))
 
