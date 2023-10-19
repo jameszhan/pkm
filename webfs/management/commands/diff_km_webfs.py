@@ -21,7 +21,7 @@ class Command(BaseCommand):
                 WebFSManagedFile.objects.get(id=file.id)
             except WebFSManagedFile.DoesNotExist:
                 uf = file.unique_file
-                msg = f'{file.original_path}({file.id}) - {uf.name}{uf.content_type} not found.'
+                msg = f'{file.original_path}({file.id}) - {uf.name}[{uf.content_type}] not found.'
                 self.stdout.write(self.style.ERROR(msg))
 
 

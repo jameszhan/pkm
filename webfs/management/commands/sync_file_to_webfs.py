@@ -24,6 +24,7 @@ class Command(BaseCommand):
             "application/x-mobipocket-ebook": EBookUniqueFile,
             "application/vnd.amazon.mobi8-ebook": EBookUniqueFile,
             "image/vnd.djvu": EBookUniqueFile,
+            "application/vnd.pdg": EBookUniqueFile,
             "image/x-ms-bmp": ImageUniqueFile,
             "image/jpeg": ImageUniqueFile,
             "image/gif": ImageUniqueFile,
