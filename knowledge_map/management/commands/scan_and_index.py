@@ -19,7 +19,7 @@ FALLBACK_MIMES = {
     '.azw': 'application/vnd.amazon.ebook',
     '.chm': 'application/vnd.ms-htmlhelp',
     '.djvu': 'image/vnd.djvu',
-    '.pdg': 'application/vnd.pdg',
+    # '.pdg': 'application/vnd.pdg',
 }
 
 
@@ -87,7 +87,7 @@ def process_common_file(foldername, filename, basename, root_dir, prefix, ext, k
         ".azw3": "azws",
         ".mobi": "mobis",
         ".djvu": "djvus",
-        ".pdg": "pdgs",
+        # ".pdg": "pdgs",
         ".jpeg": "images",
         ".jpg": "images",
         ".bmp": "images",
@@ -218,7 +218,7 @@ class Command(BaseCommand):
             '.azw': process_common_file,
             '.azw3': process_common_file,
             '.chm': process_common_file,
-            '.pdg': process_common_file,
+            # '.pdg': process_common_file,
             '.jpeg': process_common_file,
             '.jpg': process_common_file,
             '.png': process_common_file,
