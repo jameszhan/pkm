@@ -55,7 +55,7 @@ def pdf_files(request, series_slug=None):
     elif year:
         files = files.filter(modified_time__year=year)
 
-    paginator = Paginator(files, 50)
+    paginator = Paginator(files, 100)
     page_number = request.GET.get('page', 1)
     files = paginator.get_page(page_number)
 
@@ -85,7 +85,7 @@ def file_list(request):
 
     files = files.prefetch_related('unique_file')
 
-    paginator = Paginator(files, 50)
+    paginator = Paginator(files, 100)
     page_number = request.GET.get('page', 1)
     files = paginator.get_page(page_number)
 
