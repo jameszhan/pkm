@@ -48,19 +48,40 @@
                     <tr>
                         <th>名称</th>
                         <th>大小</th>
-                        <th>修改日期</th>
-                        <th>创建日期</th>
-                        <th>Tags</th>
+                        <th>发布日期</th>
+                        <th>类型</th>
+                        <th>状态</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for file in files %}
                     <tr>
-                        <td><a href="{{ file_server }}/{{ file.file_path }}" target="_blank">{{ file.name }}</a></td>
+                        <td>
+                            <p class="d-inline-flex gap-1">
+                                <a href="{{ file_server }}/{{ file.file_path }}" target="_blank">{{ file.name }}</a>
+                            </p>
+                            <div class="collapse" id="file-{{ file.id }}">
+                              <div class="card card-body">
+                              来源：
+                                <ul>
+                                    {% for f in file.managed_files.all %}
+                                    <li>{{ f.original_path }}</li>
+                                    {% endfor %}
+                                </ul>
+                              {% if file.tags.all %}
+                              标签：{% for tag in file.tags.all %}{{ tag.name }} {% endfor %}
+                              {% endif %}
+                              </div>
+                            </div>
+                        </td>
                         <td>{{ file.file_size|humanize }}</td>
                         <td>{{ file.created_time|timezone:"Asia/Shanghai"|date:"Y-m-d" }}</td>
-                        <td>{{ file.modified_time|timezone:"Asia/Shanghai"|date:"Y-m-d" }}</td>
-                        <td>{% for tag in file.tags.all %}{{ tag.name }}{% endfor %}</td>
+                        <td>{{ file.get_resource_type_display }}</td>
+                        <td>
+                            <a href="#" data-bs-toggle="collapse"
+                               data-bs-target="#file-{{ file.id }}" aria-expanded="false"
+                               aria-controls="file-{{ file.id }}">{{ file.get_status_display }}</a>
+                        </td>
                     </tr>
                     {% endfor %}
                     </tbody>

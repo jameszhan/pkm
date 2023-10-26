@@ -16,11 +16,11 @@ def date_hierarchy(model, year=None, month=None, day=None):
     }
 
     if year and month:
-        date_filters['days'] = model.objects.filter(modified_time__year=year, modified_time__month=month).dates('modified_time', 'day')
+        date_filters['days'] = model.objects.filter(created_time__year=year, created_time__month=month).dates('created_time', 'day')
     elif year:
-        date_filters['months'] = model.objects.filter(modified_time__year=year).dates('modified_time', 'month')
+        date_filters['months'] = model.objects.filter(created_time__year=year).dates('created_time', 'month')
     else:
-        date_filters['years'] = model.objects.dates('modified_time', 'year')
+        date_filters['years'] = model.objects.dates('created_time', 'year')
 
     return date_filters
 
@@ -28,7 +28,7 @@ def date_hierarchy(model, year=None, month=None, day=None):
 @login_required
 def pdf_files(request, series_slug=None):
     files = (PDFUniqueFile.objects.prefetch_related('managed_files').prefetch_related('tags').all()
-             .order_by('-modified_time'))
+             .order_by('name'))
 
     q = request.GET.get('q', None)
     if q:
@@ -49,11 +49,11 @@ def pdf_files(request, series_slug=None):
     month = request.GET.get('month')
     day = request.GET.get('day')
     if year and month and day:
-        files = files.filter(modified_time__year=year, modified_time__month=month, modified_time__day=day)
+        files = files.filter(created_time__year=year, created_time__month=month, created_time__day=day)
     elif year and month:
-        files = files.filter(modified_time__year=year, modified_time__month=month)
+        files = files.filter(created_time__year=year, created_time__month=month)
     elif year:
-        files = files.filter(modified_time__year=year)
+        files = files.filter(created_time__year=year)
 
     paginator = Paginator(files, 100)
     page_number = request.GET.get('page', 1)

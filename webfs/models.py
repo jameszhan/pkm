@@ -50,6 +50,17 @@ class Series(models.Model):
         return f"{self.name}"
 
 
+class Level(models.Model):
+    code = models.CharField(max_length=64, unique=True)
+    name = models.CharField(max_length=64, unique=True)
+    rule = models.CharField(max_length=768, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.name}"
+
+
 class BaseUniqueFile(models.Model):
     RESOURCE_TYPE_CHOICES = (
         ('BOOKS', '图书'),
@@ -96,8 +107,10 @@ class BaseUniqueFile(models.Model):
     modified_time = models.DateTimeField(null=True, blank=True, db_index=True)
     accessed_time = models.DateTimeField(null=True, blank=True)
     metadata = models.JSONField(null=True, blank=True)
+    rating = models.PositiveIntegerField(default=0, db_index=True)
     status = models.CharField(max_length=16, choices=FILE_STATUS_CHOICES, default='LISTING', db_index=True)
     categories = models.ManyToManyField(Category)
+    levels = models.ManyToManyField(Level, blank=True)
     series = models.ForeignKey(Series, on_delete=models.SET_NULL, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

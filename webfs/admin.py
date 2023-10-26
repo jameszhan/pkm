@@ -7,7 +7,7 @@ from django.utils.safestring import mark_safe
 from taggit.forms import TagWidget
 from taggit.managers import TaggableManager
 from global_utils.functions import human_readable_size
-from .models import (FileTag, TaggedFile, ManagedFile, Series, PDFUniqueFile, TextUniqueFile, ImageUniqueFile,
+from .models import (FileTag, TaggedFile, ManagedFile, Series, Level, PDFUniqueFile, TextUniqueFile, ImageUniqueFile,
                      AudioUniqueFile, VideoUniqueFile, EBookUniqueFile, DocUniqueFile)
 
 
@@ -92,78 +92,50 @@ class ManagedFileAdmin(admin.ModelAdmin):
     path_with_link.admin_order_field = "original_path"
 
 
-class PDFTagsFilter(TagsFilter):
-    def get_model_type(self):
-        return PDFUniqueFile
-
-
-@admin.register(PDFUniqueFile)
-class PDFUniqueFileAdmin(BaseUniqueFileAdmin):
-    list_filter = [PDFTagsFilter, 'series', 'status', 'resource_type', 'categories', 'modified_time']
-
-
-class AudioTagsFilter(TagsFilter):
-    def get_model_type(self):
-        return AudioUniqueFile
-
-
-@admin.register(AudioUniqueFile)
-class AudioUniqueFileAdmin(BaseUniqueFileAdmin):
-    list_filter = [AudioTagsFilter, 'series', 'content_type', 'status', 'resource_type', 'categories', 'modified_time']
-
-
-class VideoTagsFilter(TagsFilter):
-    def get_model_type(self):
-        return VideoUniqueFile
-
-
-@admin.register(VideoUniqueFile)
-class VideoUniqueFileAdmin(BaseUniqueFileAdmin):
-    list_filter = [VideoTagsFilter, 'series', 'content_type', 'status', 'resource_type', 'categories', 'modified_time']
-
-
-class ImageTagsFilter(TagsFilter):
-    def get_model_type(self):
-        return ImageUniqueFile
-
-
-@admin.register(ImageUniqueFile)
-class ImageUniqueFileAdmin(BaseUniqueFileAdmin):
-    list_filter = [ImageTagsFilter, 'series', 'content_type', 'status', 'resource_type', 'categories', 'modified_time']
-
-
-class EBookTagsFilter(TagsFilter):
-    def get_model_type(self):
-        return EBookUniqueFile
-
-
-@admin.register(EBookUniqueFile)
-class EBookUniqueFileAdmin(BaseUniqueFileAdmin):
-    list_filter = [EBookTagsFilter, 'series', 'content_type', 'status', 'resource_type', 'categories', 'modified_time']
-
-
-class DocTagsFilter(TagsFilter):
-    def get_model_type(self):
-        return DocUniqueFile
-
-
-@admin.register(DocUniqueFile)
-class DocUniqueFileAdmin(BaseUniqueFileAdmin):
-    list_filter = [DocTagsFilter, 'series', 'content_type', 'status', 'resource_type', 'categories', 'modified_time']
-
-
-class TextTagsFilter(TagsFilter):
-    def get_model_type(self):
-        return TextUniqueFile
-
-
-@admin.register(TextUniqueFile)
-class TextUniqueFileAdmin(BaseUniqueFileAdmin):
-    list_filter = [TextTagsFilter, 'series', 'content_type', 'status', 'resource_type', 'categories', 'modified_time']
-
-
 @admin.register(Series)
 class SeriesAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'slug')
-    search_fields = ['name']
+    search_fields = ['name', 'slug']
+
+
+@admin.register(Level)
+class SeriesAdmin(admin.ModelAdmin):
+    list_display = ('id', 'code', 'name', 'rule')
+    search_fields = ['code', 'name']
+
+
+def create_tags_filter(file_type, unique_file_model):
+    tags_filter_class_name = f"{file_type}TagsFilter"
+    return type(tags_filter_class_name, (TagsFilter,), {
+        'get_model_type': lambda self: unique_file_model
+    })
+
+
+def create_admin_class(file_type, tags_filter, additional_filters):
+    admin_class_name = f"{file_type}UniqueFileAdmin"
+    return type(admin_class_name,  (BaseUniqueFileAdmin,), {
+        'list_filter': [tags_filter] + additional_filters
+    })
+
+
+FILE_TYPES = {
+    'PDF': (PDFUniqueFile, ['series', 'status', 'resource_type', 'categories', 'modified_time']),
+    'Audio': (AudioUniqueFile, ['series', 'content_type', 'status', 'resource_type', 'categories', 'modified_time']),
+    'Video': (VideoUniqueFile, ['series', 'content_type', 'status', 'resource_type', 'categories', 'modified_time']),
+    'Image': (ImageUniqueFile, ['series', 'content_type', 'status', 'resource_type', 'categories', 'modified_time']),
+    'EBook': (EBookUniqueFile, ['series', 'content_type', 'status', 'resource_type', 'categories', 'modified_time']),
+    'Doc': (DocUniqueFile, ['series', 'content_type', 'status', 'resource_type', 'categories', 'modified_time']),
+    'Text': (TextUniqueFile, ['series', 'content_type', 'status', 'resource_type', 'categories', 'modified_time']),
+}
+
+
+for filetype, (uniquefilemodel, additionalfilters) in FILE_TYPES.items():
+    tagsfilter = create_tags_filter(filetype, uniquefilemodel)
+    adminclass = create_admin_class(filetype, tagsfilter, additionalfilters)
+    admin.site.register(uniquefilemodel, adminclass)
+
+
+
+
+
 
