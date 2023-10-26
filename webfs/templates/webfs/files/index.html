@@ -50,7 +50,6 @@
                         <th>大小</th>
                         <th>修改日期</th>
                         <th>创建日期</th>
-                        <th>标签</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -60,7 +59,6 @@
                         <td>{{ file.unique_file.file_size|humanize }}</td>
                         <td>{{ file.unique_file.created_time|timezone:"Asia/Shanghai"|date:"Y-m-d" }}</td>
                         <td>{{ file.unique_file.modified_time|timezone:"Asia/Shanghai"|date:"Y-m-d" }}</td>
-                        <td>{% for tag in file.unique_file.tags.all %}{{ tag.name }}{% endfor %}</td>
                     </tr>
                     {% endfor %}
                     </tbody>

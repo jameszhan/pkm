@@ -78,7 +78,7 @@ def pdf_files(request, series_slug=None):
 
 @login_required
 def file_list(request):
-    files = ManagedFile.objects.order_by('id')
+    files = ManagedFile.objects.order_by('original_path')
     q = request.GET.get('q', None)
     if q:
         files = files.filter(Q(original_path__icontains=q) | Q(object_digest__icontains=q))
