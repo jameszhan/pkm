@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: pkm-container
-          image: "jameszhan/pkm:0.0.33"
+          image: "jameszhan/pkm:0.0.35"
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - mountPath: "/app/.env"
