@@ -50,7 +50,8 @@
                         <th style="width: 100px">大小</th>
                         <th style="width: 110px">发布日期</th>
                         <th style="width: 80px">类型</th>
-                        <th style="width: 80px">状态</th>
+                        <th style="width: 80px">发布状态</th>
+                        <th style="width: 80px">存储状态</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -63,13 +64,16 @@
                         <td>{{ file.created_time|timezone:"Asia/Shanghai"|date:"Y-m-d" }}</td>
                         <td>{{ file.get_resource_type_display }}</td>
                         <td>
+                            {{ file.get_status_display }}
+                        </td>
+                        <td>
                             <a href="#" data-bs-toggle="collapse"
                                data-bs-target="#file-{{ file.id }}" aria-expanded="false"
-                               aria-controls="file-{{ file.id }}">{{ file.get_status_display }}</a>
+                               aria-controls="file-{{ file.id }}">{{ file.get_storage_status_display }}</a>
                         </td>
                     </tr>
                     <tr>
-                        <td class="collapse" id="file-{{ file.id }}" colspan="5">
+                        <td class="collapse" id="file-{{ file.id }}" colspan="6">
                             <div class="card card-body">
                                 来源：
                                 <ul>
