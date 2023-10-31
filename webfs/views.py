@@ -79,7 +79,7 @@ def pdf_files(request, series_slug=None):
 @login_required
 def duplicates_pdf_files(request):
     duplicates = PDFUniqueFile.objects.values('name').annotate(name_count=Count('name')).filter(
-        name_count__gt=1).values('name', 'name_count')
+        name_count__gt=1).order_by('-name_count').values('name', 'name_count')
 
     paginator = Paginator(duplicates, 100)
     page_number = request.GET.get('page', 1)
