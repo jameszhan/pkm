@@ -58,6 +58,7 @@ class BaseUniqueFileAdmin(admin.ModelAdmin):
     list_filter = ['modified_time']
     search_fields = ['name', 'digest']
     date_hierarchy = 'modified_time'
+    raw_id_fields = ('current_version',)
 
     def get_tag_filter(self):
         pass

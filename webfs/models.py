@@ -83,17 +83,22 @@ class BaseUniqueFile(models.Model):
         ('OTHER', '其他资源')
     )
 
-    FILE_STATUS_CHOICES = (
-        ('DELETED', '已删除'),
-        ('DISABLED', '禁止访问'),
+    PUBLISH_STATUS_CHOICES = (
         ('LISTING', '上架中'),
         ('LISTED', '已上架'),
         ('DELISTED', '已下架'),
         ('DRAFT', '草稿'),
         ('FORTHCOMING', '待出版'),
         ('PUBLISHED', '已出版'),
+    )
+
+    STORAGE_STATUS_CHOICES = (
+        ('PENDING', '等待处理'),
+        ('STORED', '已存储'),
         ('COLLECTED', '已收藏'),
         ('ARCHIVED', '已归档'),
+        ('DISABLED', '禁止访问'),
+        ('DELETED', '已删除'),
     )
 
     digest = models.CharField(max_length=64, unique=True)
@@ -108,13 +113,14 @@ class BaseUniqueFile(models.Model):
     accessed_time = models.DateTimeField(null=True, blank=True)
     metadata = models.JSONField(null=True, blank=True)
     rating = models.PositiveIntegerField(default=0, db_index=True)
-    status = models.CharField(max_length=16, choices=FILE_STATUS_CHOICES, default='LISTING', db_index=True)
+    status = models.CharField(max_length=16, choices=PUBLISH_STATUS_CHOICES, default='LISTING', db_index=True)
+    storage_status = models.CharField(max_length=16, choices=STORAGE_STATUS_CHOICES, default='STORED', db_index=True)
     categories = models.ManyToManyField(Category)
     levels = models.ManyToManyField(Level, blank=True)
     series = models.ForeignKey(Series, on_delete=models.SET_NULL, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    current_version = models.ForeignKey('self', to_field='digest', blank=True, null=True, on_delete=models.SET_NULL)
     tags = TaggableManager(through=TaggedFile)
     managed_files = GenericRelation(ManagedFile, content_type_field='content_type', object_id_field='object_id')
 
