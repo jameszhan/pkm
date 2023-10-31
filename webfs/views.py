@@ -77,6 +77,20 @@ def pdf_files(request, series_slug=None):
 
 
 @login_required
+def duplicates_pdf_files(request):
+    duplicates = PDFUniqueFile.objects.values('name').annotate(name_count=Count('name')).filter(
+        name_count__gt=1).values('name', 'name_count')
+
+    paginator = Paginator(duplicates, 100)
+    page_number = request.GET.get('page', 1)
+    files = paginator.get_page(page_number)
+
+    return render(request, 'webfs/uniquefiles/duplicates.html', {
+        'files': files,
+    })
+
+
+@login_required
 def file_list(request):
     files = ManagedFile.objects.order_by('original_path')
     q = request.GET.get('q', None)

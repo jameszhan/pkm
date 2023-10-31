@@ -6,7 +6,8 @@ app_name = 'webfs'
 urlpatterns = [
     path('files/', views.file_list, name="file_list"),
     path('pdfs/', views.pdf_files, name="pdf_files"),
-    path('pdfs/<str:series_slug>', views.pdf_files, name="pdf_files_by_series")
+    path('pdfs/<str:series_slug>', views.pdf_files, name="pdf_files_by_series"),
+    path('duplicates/pdfs', views.duplicates_pdf_files, name="duplicates_pdf_files"),
 ]
 
 
