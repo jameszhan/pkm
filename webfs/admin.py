@@ -54,7 +54,7 @@ class TagsFilter(SimpleListFilter, metaclass=ABCMeta):
 
 class BaseUniqueFileAdmin(admin.ModelAdmin):
     list_display = ('id', 'name_with_link', 'extension', 'tag_list', 'human_file_size', 'created_time', 'modified_time',
-                    'series', 'status')
+                    'series', 'status', 'storage_status')
     list_filter = ['modified_time']
     search_fields = ['name', 'digest']
     date_hierarchy = 'modified_time'

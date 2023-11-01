@@ -77,9 +77,16 @@ def pdf_files(request, series_slug=None):
 
 
 @login_required
-def duplicates_pdf_files(request):
-    duplicates = PDFUniqueFile.objects.values('name').annotate(name_count=Count('name')).filter(
-        name_count__gt=1).order_by('-name_count').values('name', 'name_count')
+def duplicates_pdf_files(request, status=None):
+    duplicates = PDFUniqueFile.objects
+    if status is not None:
+        if status == 'active':
+            duplicates = duplicates.exclude(storage_status__in=['ARCHIVED', 'DISABLED', 'DELETED'])
+        else:
+            duplicates = duplicates.filter(storage_status__iexact=status)
+
+    duplicates = (duplicates.values('name').annotate(name_count=Count('name')).filter(name_count__gt=1)
+                  .order_by('-name_count').values('name', 'name_count'))
 
     paginator = Paginator(duplicates, 100)
     page_number = request.GET.get('page', 1)
