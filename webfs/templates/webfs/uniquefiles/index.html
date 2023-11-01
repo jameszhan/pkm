@@ -81,6 +81,12 @@
                                     <li>{{ f.original_path }}</li>
                                     {% endfor %}
                                 </ul>
+                                {% if file.current_version %}
+                                    最新版本：
+                                    <a href="{{ file_server }}/{{ file.current_version.file_path }}" target="_blank">
+                                    {{ file.current_version }}
+                                    </a>
+                                {% endif %}
                                 {% if file.tags.all %}
                                 标签：{% for tag in file.tags.all %}{{ tag.name }} {% endfor %}
                                 {% endif %}
