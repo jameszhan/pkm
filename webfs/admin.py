@@ -120,7 +120,7 @@ def create_admin_class(file_type, tags_filter, additional_filters):
 
 
 FILE_TYPES = {
-    'PDF': (PDFUniqueFile, ['series', 'status', 'resource_type', 'categories', 'modified_time']),
+    'PDF': (PDFUniqueFile, ['storage_status', 'status', 'resource_type', 'series', 'categories', 'modified_time']),
     'Audio': (AudioUniqueFile, ['series', 'content_type', 'status', 'resource_type', 'categories', 'modified_time']),
     'Video': (VideoUniqueFile, ['series', 'content_type', 'status', 'resource_type', 'categories', 'modified_time']),
     'Image': (ImageUniqueFile, ['series', 'content_type', 'status', 'resource_type', 'categories', 'modified_time']),
