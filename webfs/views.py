@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator
-from django.db.models import Count, Q, Subquery, OuterRef
+from django.db.models import Count, Q, Max, Subquery, OuterRef
 from django.shortcuts import render
 from django.urls import reverse
 from .models import Series, FileTag, PDFUniqueFile, ManagedFile
@@ -85,8 +85,11 @@ def duplicates_pdf_files(request, status=None):
         else:
             duplicates = duplicates.filter(storage_status__iexact=status)
 
-    duplicates = (duplicates.values('name').annotate(name_count=Count('name')).filter(name_count__gt=1)
-                  .order_by('-name_count').values('name', 'name_count'))
+    duplicates = (duplicates.values('name').annotate(name_count=Count('name'), max_file_size=Max('file_size'))
+                  .filter(name_count__gt=1).order_by('-name_count', '-max_file_size')
+                  .values('name', 'name_count', 'max_file_size'))
+
+    print(duplicates.query)
 
     paginator = Paginator(duplicates, 100)
     page_number = request.GET.get('page', 1)

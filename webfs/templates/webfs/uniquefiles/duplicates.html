@@ -16,6 +16,7 @@
                     <tr>
                         <th>名称</th>
                         <th>关联数量</th>
+                        <th>文件大小</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -25,6 +26,7 @@
                             <a href="{% url 'webfs:pdf_files' %}?q={{ file.name }}">{{ file.name }}</a>
                         </td>
                         <td>{{ file.name_count }}</td>
+                        <td>{{ file.max_file_size|humanize }}</td>
                     </tr>
                     {% endfor %}
                     </tbody>
