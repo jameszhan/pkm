@@ -121,6 +121,7 @@
             <ul class="navbar-nav me-auto">
                 <li class="nav-item"><a class="nav-link" href="{% url 'webfs:file_list' %}">原始文件</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'webfs:pdf_files' %}">PDF文件</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'webfs:pdf_files_by_resource_type' 'books' %}">PDF文件分类</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'webfs:duplicates_pdf_files' %}">重复检测</a></li>
                 <li class="nav-item"><a class="nav-link" href="/admin">管理后台</a></li>
                 <li class="nav-item">

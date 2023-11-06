@@ -31,22 +31,22 @@
                 </ul>
                 {% if date_filters.year and date_filters.month %}
                     <ul class="list-inline mt-2">
-                        <li class="list-inline-item date-filter"><a href="{{ index_url }}?year={{ date_filters.year }}"><i class="bi-chevron-left"></i>{{ date_filters.year }}</a></li>
+                        <li class="list-inline-item date-filter"><a href="{% url 'webfs:pdf_files_by_resource_type' resource_type %}?year={{ date_filters.year }}"><i class="bi-chevron-left"></i>{{ date_filters.year }}</a></li>
                         {% for day in date_filters.days %}
                         <li class="list-inline-item date-filter"><a href="?year={{ date_filters.year }}&month={{ date_filters.month }}&day={{ day.day }}">{{ day.month|zfill:2 }}月{{ day.day|zfill:2 }}日</a></li>
                         {% endfor %}
                     </ul>
                 {% elif date_filters.year %}
                     <ul class="list-inline mt-2">
-                        <li class="list-inline-item date-filter"><a href="{{ index_url }}">&nbsp;<i class="bi-chevron-left"></i>所有日期</a></li>
+                        <li class="list-inline-item date-filter"><a href="{% url 'webfs:pdf_files_by_resource_type' resource_type %}">&nbsp;<i class="bi-chevron-left"></i>所有日期</a></li>
                         {% for month in date_filters.months %}
-                        <li class="list-inline-item date-filter"><a href="{{ index_url }}?year={{ month.year }}&month={{ month.month }}">{{ month.year }}年{{ month.month|zfill:2 }}月</a></li>
+                        <li class="list-inline-item date-filter"><a href="{% url 'webfs:pdf_files_by_resource_type' resource_type %}?year={{ month.year }}&month={{ month.month }}">{{ month.year }}年{{ month.month|zfill:2 }}月</a></li>
                         {% endfor %}
                     </ul>
                 {% else %}
                     <ul class="list-inline mt-2">
                         {% for year in date_filters.years %}
-                        <li class="list-inline-item date-filter"><a href="{{ index_url }}?year={{ year.year }}">{{ year.year }}</a></li>
+                        <li class="list-inline-item date-filter"><a href="{% url 'webfs:pdf_files_by_resource_type' resource_type %}?year={{ year.year }}">{{ year.year }}</a></li>
                         {% endfor %}
                     </ul>
                 {% endif %}
