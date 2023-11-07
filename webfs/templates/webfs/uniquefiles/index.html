@@ -81,22 +81,22 @@
                                     <li>{{ f.original_path }}</li>
                                     {% endfor %}
                                 </ul>
-                                {% if file.current_version %}
-                                    最新版本：
-                                    <a href="{{ file_server }}/{{ file.current_version.file_path }}" target="_blank">
-                                    {{ file.current_version }}
-                                    </a>
-                                {% endif %}
-                                {% if file.tags.all %}
-                                标签：{% for tag in file.tags.all %}<b class="bi bi-tag">{{ tag.name }}</b>{% endfor %}
-                                {% endif %}
-                                {% if file.categories.all %}
-                                类目：{% for c in file.categories.all %}<b class="bi bi-book">{{ c.name }}</b>{% endfor %}
-                                {% endif %}
-                                {% if file.series %}
-                                丛书：{{ file.series }}
-                                {% endif %}
-                                评分：{{ file.rating }}
+                                元信息:
+                                <ul>
+                                    {% if file.current_version %}
+                                        <li>最新版本：<a href="{{ file_server }}/{{ file.current_version.file_path }}" target="_blank">{{ file.current_version }}</a></li>
+                                    {% endif %}
+                                    {% if file.tags.all %}
+                                        <li>标签：{% for tag in file.tags.all %}<b class="bi bi-tag">{{ tag.name }}</b>{% endfor %}</li>
+                                    {% endif %}
+                                    {% if file.categories.all %}
+                                        <li>类目：{% for c in file.categories.all %}<b class="bi bi-book">{{ c.name }}</b>{% endfor %}</li>
+                                    {% endif %}
+                                    {% if file.series %}
+                                        <li>丛书：{{ file.series }}</li>
+                                    {% endif %}
+                                    <li>评分：{{ file.rating }}</li>
+                                </ul>
                             </div>
                         </td>
                     </tr>
