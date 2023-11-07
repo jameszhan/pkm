@@ -54,7 +54,7 @@ class TagsFilter(SimpleListFilter, metaclass=ABCMeta):
 
 class BaseUniqueFileAdmin(admin.ModelAdmin):
     list_display = ('id', 'name_with_link', 'extension', 'tag_list', 'human_file_size', 'created_time', 'modified_time',
-                    'series', 'status', 'current_version', 'storage_status')
+                    'series', 'resource_type', 'status', 'storage_status', 'current_version')
     list_filter = ['modified_time']
     search_fields = ['name', 'digest']
     date_hierarchy = 'modified_time'
@@ -120,13 +120,13 @@ def create_admin_class(file_type, tags_filter, additional_filters):
 
 
 FILE_TYPES = {
-    'PDF': (PDFUniqueFile, ['storage_status', 'status', 'resource_type', 'series', 'categories', 'modified_time']),
-    'Audio': (AudioUniqueFile, ['series', 'content_type', 'status', 'resource_type', 'categories', 'modified_time']),
-    'Video': (VideoUniqueFile, ['series', 'content_type', 'status', 'resource_type', 'categories', 'modified_time']),
-    'Image': (ImageUniqueFile, ['series', 'content_type', 'status', 'resource_type', 'categories', 'modified_time']),
-    'EBook': (EBookUniqueFile, ['series', 'content_type', 'status', 'resource_type', 'categories', 'modified_time']),
-    'Doc': (DocUniqueFile, ['series', 'content_type', 'status', 'resource_type', 'categories', 'modified_time']),
-    'Text': (TextUniqueFile, ['series', 'content_type', 'status', 'resource_type', 'categories', 'modified_time']),
+    'PDF': (PDFUniqueFile, ['resource_type', 'storage_status', 'status', 'series', 'categories', 'modified_time']),
+    'Audio': (AudioUniqueFile, ['resource_type', 'series', 'content_type', 'status', 'categories', 'modified_time']),
+    'Video': (VideoUniqueFile, ['resource_type', 'series', 'content_type', 'status', 'categories', 'modified_time']),
+    'Image': (ImageUniqueFile, ['resource_type', 'series', 'content_type', 'status', 'categories', 'modified_time']),
+    'EBook': (EBookUniqueFile, ['resource_type', 'series', 'content_type', 'status', 'categories', 'modified_time']),
+    'Doc': (DocUniqueFile, ['resource_type', 'series', 'content_type', 'status', 'categories', 'modified_time']),
+    'Text': (TextUniqueFile, ['resource_type', 'series', 'content_type', 'status', 'categories', 'modified_time']),
 }
 
 

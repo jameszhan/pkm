@@ -99,6 +99,13 @@
                                 {% if file.tags.all %}
                                 标签：{% for tag in file.tags.all %}{{ tag.name }} {% endfor %}
                                 {% endif %}
+                                {% if file.categories.all %}
+                                类目：{% for c in file.categories.all %}<b class="bi bi-book">{{ c.name }}</b>{% endfor %}
+                                {% endif %}
+                                {% if file.series %}
+                                丛书：{{ file.series }}
+                                {% endif %}
+                                评分：{{ file.rating }}
                             </div>
                         </td>
                     </tr>
