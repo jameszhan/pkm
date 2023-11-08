@@ -95,9 +95,12 @@ def pdf_files(request, series_slug=None):
 
 
 @login_required
-def pdf_files_by_resource_type(request, resource_type):
+def pdf_files_by_path_cond(request, resource_type, status=None):
     files = (PDFUniqueFile.objects.prefetch_related('managed_files').prefetch_related('tags')
              .filter(resource_type=resource_type.upper()).all().order_by('-file_size'))
+
+    if status is not None:
+        files = files.filter(storage_status__iexact=status)
 
     q = request.GET.get('q', None)
     if q:
@@ -133,9 +136,11 @@ def pdf_files_by_resource_type(request, resource_type):
     return render(request, 'webfs/uniquefiles/resource_types.html', {
         'tagged_tags': tagged_tags,
         'resource_types': PDFUniqueFile.RESOURCE_TYPE_CHOICES,
+        'storage_statuses': PDFUniqueFile.STORAGE_STATUS_CHOICES,
         'files': files,
         'tags': tags,
         'resource_type': resource_type,
+        'storage_status': status,
         'date_filters': date_hierarchy2(PDFUniqueFile.objects.filter(resource_type=resource_type), year, month, day),
         'file_server': settings.FILE_SERVER,
     })

@@ -60,7 +60,16 @@
                         <th style="width: 110px">发布日期</th>
                         <th style="width: 80px">类型</th>
                         <th style="width: 80px">发布状态</th>
-                        <th style="width: 80px">存储状态</th>
+                        <th style="width: 80px">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">存储状态</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'webfs:pdf_files_by_resource_type' resource_type %}">所有状态</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                {% for v, l in storage_statuses %}
+                                    <li><a class="dropdown-item" href="{% url 'webfs:pdf_files_by_path_cond' resource_type v|lower %}">{{ l }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
