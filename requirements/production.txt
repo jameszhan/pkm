@@ -1,4 +1,4 @@
-django==4.1.7
+django
 python-dotenv
 mysqlclient
 djangorestframework
