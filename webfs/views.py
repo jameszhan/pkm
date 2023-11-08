@@ -124,14 +124,15 @@ def pdf_files_by_path_cond(request, resource_type, status=None):
     elif year:
         files = files.filter(created_time__year=year)
 
+    tags = FileTag.objects.filter(
+        webfs_taggedfile_items__content_type=ContentType.objects.get_for_model(PDFUniqueFile),
+        webfs_taggedfile_items__object_id__in=files
+        #        webfs_taggedfile_items__object_id__in=PDFUniqueFile.objects.filter(resource_type=resource_type)
+    ).annotate(file_count=Count('webfs_taggedfile_items')).filter(file_count__gt=0).order_by('-file_count')
+
     paginator = Paginator(files, 100)
     page_number = request.GET.get('page', 1)
     files = paginator.get_page(page_number)
-
-    tags = FileTag.objects.filter(
-        webfs_taggedfile_items__content_type=ContentType.objects.get_for_model(PDFUniqueFile),
-        webfs_taggedfile_items__object_id__in=PDFUniqueFile.objects.filter(resource_type=resource_type)
-    ).annotate(file_count=Count('webfs_taggedfile_items')).filter(file_count__gt=0).order_by('-file_count')
 
     return render(request, 'webfs/uniquefiles/resource_types.html', {
         'tagged_tags': tagged_tags,
