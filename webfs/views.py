@@ -123,6 +123,7 @@ def pdf_files_by_path_cond(request, resource_type, status=None):
         files = files.filter(created_time__year=year, created_time__month=month)
     elif year:
         files = files.filter(created_time__year=year)
+    date_filters = date_hierarchy2(files, year, month, day)
 
     tags = FileTag.objects.filter(
         webfs_taggedfile_items__content_type=ContentType.objects.get_for_model(PDFUniqueFile),
@@ -142,7 +143,8 @@ def pdf_files_by_path_cond(request, resource_type, status=None):
         'tags': tags,
         'resource_type': resource_type,
         'storage_status': status,
-        'date_filters': date_hierarchy2(PDFUniqueFile.objects.filter(resource_type=resource_type), year, month, day),
+        # 'date_filters': date_hierarchy2(PDFUniqueFile.objects.filter(resource_type=resource_type), year, month, day),
+        'date_filters': date_filters,
         'file_server': settings.FILE_SERVER,
     })
 
