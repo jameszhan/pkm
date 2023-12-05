@@ -161,3 +161,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 FILE_SERVER = os.getenv('FILE_SERVER')
 
+
+

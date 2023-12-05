@@ -128,6 +128,11 @@
                     <a class="nav-link" href="javascript:void(0);">关于</a>
                 </li>
             </ul>
+            <div class="form-check form-switch">
+              <input class="form-check-input" name="use_cloudflare" type="checkbox" data-url="{% url 'webfs:use_cloudflare' %}"
+                     {% if request.COOKIES.useCloudflare %}checked{% endif %} title="Use Cloudflare"
+                     id="useCloudflare" aria-label="useCloudflare" />
+            </div>
             <form class="d-flex" action="{{ index_url }}">
                 <input class="form-control me-2" type="search" name="q" placeholder="" aria-label="Search">
                 <button class="btn btn-light text-nowrap" type="submit">搜索</button>
@@ -151,6 +156,21 @@
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"
         integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0="
         crossorigin="anonymous"></script>
+<script>
+    $(document).on('change', '#useCloudflare', function (e) {
+        e.preventDefault();
+        let url = $(this).data('url');
+        if (this.checked) {
+            url += '?enabled=1'
+        }
+        $.get(url).done(function (r, status, jqXHR) {
+            console.log(r);
+        }).fail(function (jqXHR, textStatus, errorMessage) {
+            alert(jqXHR.responseText);
+        });
+        return false;
+    });
+</script>
 {% block script %}
 {% endblock %}
 

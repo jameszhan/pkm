@@ -1,0 +1,155 @@
+{% extends "layouts/webfs.html" %}
+
+{% load template_tags %}
+{% load tz %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+    <ul class="nav nav-tabs">
+        {% for value, label in resource_types %}
+            {% if value|lower == 'photos' or value|lower == 'images' or value|lower == 'movies' or value|lower == 'video' or value|lower == 'audio' or value|lower == 'music' %}
+            {% elif value|lower == resource_type %}
+                <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">{{ label }}</a></li>
+            {% else %}
+                <li class="nav-item"><a class="nav-link" aria-current="page" href="{% url 'webfs:pdf_files_by_resource_type' value|lower %}">{{ label }}</a></li>
+            {% endif %}
+        {% endfor %}
+        <!-- li class="nav-item form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+        </li -->
+    </ul>
+    <div class="row g-5">
+        <div class="col-md-9">
+            <nav>
+                <ul class="list-inline mt-2">
+                    {% for tag in tagged_tags %}
+                    <li class="list-inline-item tag">
+                        <a href="{% url 'webfs:pdf_files_by_resource_type' resource_type %}?{% for tag2 in tagged_tags %}{% if tag.slug != tag2.slug %}{% if not forloop.first %}&{% endif %}tag={{ tag2.slug }}{% endif %}{% endfor %}">
+                            <i class="bi-tag"></i>{{ tag.name }}<span>x</span>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% if date_filters.year and date_filters.month %}
+                    <ul class="list-inline mt-2">
+                        <li class="list-inline-item date-filter"><a href="{% url 'webfs:pdf_files_by_resource_type' resource_type %}?year={{ date_filters.year }}"><i class="bi-chevron-left"></i>{{ date_filters.year }}</a></li>
+                        {% for day in date_filters.days %}
+                        <li class="list-inline-item date-filter"><a href="?year={{ date_filters.year }}&month={{ date_filters.month }}&day={{ day.day }}">{{ day.month|zfill:2 }}月{{ day.day|zfill:2 }}日</a></li>
+                        {% endfor %}
+                    </ul>
+                {% elif date_filters.year %}
+                    <ul class="list-inline mt-2">
+                        <li class="list-inline-item date-filter"><a href="{% url 'webfs:pdf_files_by_resource_type' resource_type %}">&nbsp;<i class="bi-chevron-left"></i>所有日期</a></li>
+                        {% for month in date_filters.months %}
+                        <li class="list-inline-item date-filter"><a href="{% url 'webfs:pdf_files_by_resource_type' resource_type %}?year={{ month.year }}&month={{ month.month }}">{{ month.year }}年{{ month.month|zfill:2 }}月</a></li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <ul class="list-inline mt-2">
+                        {% for year in date_filters.years %}
+                        <li class="list-inline-item date-filter"><a href="{% url 'webfs:pdf_files_by_resource_type' resource_type %}?year={{ year.year }}">{{ year.year }}</a></li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </nav>
+            <article class="blog-post">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th style="width: 100px">大小</th>
+                        <th style="width: 110px">发布日期</th>
+                        <th style="width: 80px">类型</th>
+                        <th style="width: 80px">发布状态</th>
+                        <th style="width: 80px">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">存储状态</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'webfs:pdf_files_by_resource_type' resource_type %}">所有状态</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                {% for v, l in storage_statuses %}
+                                    <li><a class="dropdown-item" href="{% url 'webfs:pdf_files_by_resource_type' resource_type %}?storage_status={{ v|lower }}">{{ l }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for file in files %}
+                    <tr>
+                        <td>
+                            <a href="{{ file_server }}/{{ file.file_path }}" target="_blank">{{ file.name }}</a>
+                        </td>
+                        <td>{{ file.file_size|humanize }}</td>
+                        <td>{{ file.created_time|timezone:"Asia/Shanghai"|date:"Y-m-d" }}</td>
+                        <td>{{ file.get_resource_type_display }}</td>
+                        <td>
+                            {{ file.get_status_display }}
+                        </td>
+                        <td>
+                            <a href="#" data-bs-toggle="collapse"
+                               data-bs-target="#file-{{ file.id }}" aria-expanded="false"
+                               aria-controls="file-{{ file.id }}">{{ file.get_storage_status_display }}</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="collapse" id="file-{{ file.id }}" colspan="6">
+                            <div class="card card-body">
+                                来源：
+                                <ul>
+                                    {% for f in file.managed_files.all %}
+                                    <li>{{ f.original_path }}</li>
+                                    {% endfor %}
+                                </ul>
+                                元信息:
+                                <ul>
+                                    {% if file.current_version %}
+                                        <li>最新版本：<a href="{{ file_server }}/{{ file.current_version.file_path }}" target="_blank">{{ file.current_version }}</a></li>
+                                    {% endif %}
+                                    {% if file.tags.all %}
+                                        <li>标签：{% for tag in file.tags.all %}<b class="bi bi-tag">{{ tag.name }}</b>{% endfor %}</li>
+                                    {% endif %}
+                                    {% if file.categories.all %}
+                                        <li>类目：{% for c in file.categories.all %}<b class="bi bi-book">{{ c.name }}</b>{% endfor %}</li>
+                                    {% endif %}
+                                    {% if file.series %}
+                                        <li>丛书：{{ file.series }}</li>
+                                    {% endif %}
+                                    <li>评分：{{ file.rating }}</li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% include "includes/pagination.html" with page=files %}
+            </article>
+        </div>
+        <div class="col-md-3">
+            <aside class="mt-3">
+                <details class="box" data-filter-title="标签" open>
+                    <summary class="title">
+                        <span>
+                            <i class="bi-tags"></i>
+                            标签
+                        </span>
+                    </summary>
+                    <ul class="list-inline mt-2">
+                    {% for tag in tags %}
+                    <li class="list-inline-item tag">
+                        <a href="{% url 'webfs:pdf_files_by_resource_type' resource_type %}?tag={{ tag.slug }}">
+                            {{ tag.name }}
+                            <span>{{ tag.file_count }}</span>
+                        </a>
+                    </li>
+                    {% empty %}
+                    There are no tags yet.
+                    {% endfor %}
+                    </ul>
+                </details>
+            </aside>
+        </div>
+    </div>
+{% endblock %}

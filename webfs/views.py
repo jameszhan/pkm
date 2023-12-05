@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator
@@ -6,6 +7,15 @@ from django.db.models import Count, Q, Max, Subquery, OuterRef
 from django.shortcuts import render
 from django.urls import reverse
 from .models import Series, FileTag, PDFUniqueFile, ManagedFile
+from .services import search_files
+
+
+def get_file_server(request):
+    flag = request.COOKIES.get('useCloudflare')
+    if flag:
+        return "https://fs.localgpt.net"
+    else:
+        return settings.FILE_SERVER
 
 
 def date_hierarchy(model, year=None, month=None, day=None):
@@ -89,63 +99,36 @@ def pdf_files(request, series_slug=None):
         'tags': tags,
         'series_list': series_list,
         'date_filters': date_hierarchy(PDFUniqueFile, year, month, day),
-        'file_server': settings.FILE_SERVER,
+        'file_server': get_file_server(request),
         'index_url': reverse('webfs:pdf_files'),
     })
 
 
 @login_required
-def pdf_files_by_path_cond(request, resource_type, status=None):
-    files = (PDFUniqueFile.objects.prefetch_related('managed_files').prefetch_related('tags')
-             .filter(resource_type=resource_type.upper()).all().order_by('-file_size'))
-
-    if status is not None:
-        files = files.filter(storage_status__iexact=status)
-
+def pdf_files_by_resource_type(request, resource_type):
     q = request.GET.get('q', None)
-    if q:
-        files = files.filter(Q(name__icontains=q) | Q(digest__icontains=q))
-
-    tag_slugs = request.GET.getlist('tag')
-    if tag_slugs:
-        tagged_tags = FileTag.objects.filter(slug__in=tag_slugs)
-        files = (files.filter(tags__in=tagged_tags).annotate(distinct_tags=Count('tags', distinct=True))
-                 .filter(distinct_tags=len(tagged_tags)))
-    else:
-        tagged_tags = []
-
+    s = request.GET.get('status', None)
+    ss = request.GET.get('storage_status', None)
     year = request.GET.get('year')
     month = request.GET.get('month')
     day = request.GET.get('day')
-    if year and month and day:
-        files = files.filter(created_time__year=year, created_time__month=month, created_time__day=day)
-    elif year and month:
-        files = files.filter(created_time__year=year, created_time__month=month)
-    elif year:
-        files = files.filter(created_time__year=year)
-    date_filters = date_hierarchy2(files, year, month, day)
+    tag_slugs = request.GET.getlist('tag')
 
-    tags = FileTag.objects.filter(
-        webfs_taggedfile_items__content_type=ContentType.objects.get_for_model(PDFUniqueFile),
-        webfs_taggedfile_items__object_id__in=files
-        #        webfs_taggedfile_items__object_id__in=PDFUniqueFile.objects.filter(resource_type=resource_type)
-    ).annotate(file_count=Count('webfs_taggedfile_items')).filter(file_count__gt=0).order_by('-file_count')
-
+    files, date_filters, tags, tagged_tags = search_files(PDFUniqueFile, resource_type, s, ss, tag_slugs, q, year, month, day)
     paginator = Paginator(files, 100)
     page_number = request.GET.get('page', 1)
     files = paginator.get_page(page_number)
 
-    return render(request, 'webfs/uniquefiles/resource_types.html', {
+    return render(request, 'webfs/pdfs/index.html', {
+        'files': files,
+        'date_filters': date_filters,
+        'tags': tags,
         'tagged_tags': tagged_tags,
+        'resource_type': resource_type,
+        'storage_status': ss,
         'resource_types': PDFUniqueFile.RESOURCE_TYPE_CHOICES,
         'storage_statuses': PDFUniqueFile.STORAGE_STATUS_CHOICES,
-        'files': files,
-        'tags': tags,
-        'resource_type': resource_type,
-        'storage_status': status,
-        # 'date_filters': date_hierarchy2(PDFUniqueFile.objects.filter(resource_type=resource_type), year, month, day),
-        'date_filters': date_filters,
-        'file_server': settings.FILE_SERVER,
+        'file_server': get_file_server(request),
     })
 
 
@@ -186,7 +169,16 @@ def file_list(request):
 
     return render(request, 'webfs/files/index.html', {
         'files': files,
-        'file_server': settings.FILE_SERVER,
+        'file_server': get_file_server(request),
         'index_url': reverse('webfs:file_list')
     })
 
+
+def use_cloudflare(request):
+    response = JsonResponse({"op": "set_cookie"})
+    enabled = request.GET.get('enabled', None)
+    if enabled:
+        response.set_cookie('useCloudflare', '1')
+    else:
+        response.delete_cookie('useCloudflare')
+    return response
