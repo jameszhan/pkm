@@ -13,7 +13,7 @@ from .services import search_files
 def get_file_server(request):
     flag = request.COOKIES.get('useCloudflare')
     if flag:
-        return "https://fs.localgpt.net"
+        return settings.CDN_SERVER
     else:
         return settings.FILE_SERVER
 
