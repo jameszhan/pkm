@@ -109,8 +109,9 @@ def process_common_file(foldername, filename, basename, root_dir, prefix, ext, k
     if managed_file is not None:
         digest = sha256(filepath)
         if digest == managed_file.unique_file_id:
-            print(f'remove file {sanitized_path}({managed_file.unique_file_id}) successful')
-            os.remove(filepath)
+            if not keep_origin_file:
+                print(f'remove file {sanitized_path}({managed_file.unique_file_id}) successful')
+                os.remove(filepath)
         else:
             print(f'[ERROR] {filepath}({sanitized_path}) have already exists, but not consistent')
         return
@@ -131,8 +132,9 @@ def process_pdf_file(foldername, filename, basename, root_dir, prefix, ext, keep
     if managed_file is not None:
         digest = sha256(filepath)
         if digest == managed_file.unique_file.digest:
-            print(f'remove file {sanitized_path}({managed_file.unique_file.digest}) successful')
-            os.remove(filepath)
+            if not keep_origin_file:
+                print(f'remove file {sanitized_path}({managed_file.unique_file.digest}) successful')
+                os.remove(filepath)
         else:
             print(f'[ERROR] {filepath}({managed_file.unique_file.file_size}-{os.stat(filepath).st_size}) have already exists, but not consistent')
         return
