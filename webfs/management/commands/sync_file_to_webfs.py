@@ -5,7 +5,8 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.contrib.contenttypes.models import ContentType
 from knowledge_map.models import UniqueFile
-from webfs.models import ManagedFile, PDFUniqueFile, EBookUniqueFile, DocUniqueFile, ImageUniqueFile, AudioUniqueFile
+from webfs.models import (ManagedFile, PDFUniqueFile, EBookUniqueFile, DocUniqueFile, ImageUniqueFile, AudioUniqueFile,
+                          VideoUniqueFile)
 
 
 # python3 manage.py sync_file_to_webfs
@@ -24,12 +25,14 @@ class Command(BaseCommand):
             "application/x-mobipocket-ebook": EBookUniqueFile,
             "application/vnd.amazon.mobi8-ebook": EBookUniqueFile,
             "image/vnd.djvu": EBookUniqueFile,
-            # "application/vnd.pdg": EBookUniqueFile,
+            "image/webp": ImageUniqueFile,
             "image/x-ms-bmp": ImageUniqueFile,
             "image/jpeg": ImageUniqueFile,
             "image/gif": ImageUniqueFile,
             "image/png": ImageUniqueFile,
             "audio/mpeg": AudioUniqueFile,
+            "video/mp4": VideoUniqueFile,
+            "video/x-flv": VideoUniqueFile,
         }
 
     def handle(self, *args, **options):

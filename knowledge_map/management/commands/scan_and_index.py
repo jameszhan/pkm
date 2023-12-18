@@ -19,7 +19,8 @@ FALLBACK_MIMES = {
     '.azw': 'application/vnd.amazon.ebook',
     '.chm': 'application/vnd.ms-htmlhelp',
     '.djvu': 'image/vnd.djvu',
-    # '.pdg': 'application/vnd.pdg',
+    '.flv': 'video/x-flv',
+    '.webp': 'image/webp',
 }
 
 
@@ -87,13 +88,15 @@ def process_common_file(foldername, filename, basename, root_dir, prefix, ext, k
         ".azw3": "azws",
         ".mobi": "mobis",
         ".djvu": "djvus",
-        # ".pdg": "pdgs",
+        ".webp": "images",
         ".jpeg": "images",
         ".jpg": "images",
         ".bmp": "images",
         ".png": "images",
         ".gif": "images",
         ".mp3": "audio",
+        ".mp4": "videos",
+        ".flv": "videos",
     }
 
     if ext not in catfolders:
@@ -218,13 +221,15 @@ class Command(BaseCommand):
             '.azw': process_common_file,
             '.azw3': process_common_file,
             '.chm': process_common_file,
-            # '.pdg': process_common_file,
+            '.webp': process_common_file,
             '.jpeg': process_common_file,
             '.jpg': process_common_file,
             '.png': process_common_file,
             '.gif': process_common_file,
             '.bmp': process_common_file,
             '.mp3': process_common_file,
+            '.mp4': process_common_file,
+            '.flv': process_common_file,
         }
 
     def add_arguments(self, parser):
