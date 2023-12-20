@@ -9,8 +9,7 @@
 {% block content %}
     <ul class="nav nav-tabs">
         {% for value, label in resource_types %}
-            {% if value|lower == 'photos' or value|lower == 'images' or value|lower == 'movies' or value|lower == 'video' or value|lower == 'audio' or value|lower == 'music' %}
-            {% elif value|lower == resource_type %}
+            {% if value|lower == resource_type %}
                 <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">{{ label }}</a></li>
             {% else %}
                 <li class="nav-item"><a class="nav-link" aria-current="page" href="{% url 'webfs:pdf_files_by_resource_type' value|lower %}">{{ label }}</a></li>

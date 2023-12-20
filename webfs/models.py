@@ -1,3 +1,4 @@
+from abc import ABCMeta, abstractmethod
 from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
@@ -76,10 +77,18 @@ class BaseUniqueFile(models.Model):
         ('CODE', '代码'),
         ('PHOTOS', '照片'),
         ('IMAGES', '图片'),
-        ('MUSIC', '音乐'),
         ('AUDIO', '音频'),
+        ('AUDIOBOOKS', '有声书'),
+        ('MUSIC', '音乐'),
+        ('PODCASTS', '播客'),
+        ('BROADCASTS', '广播'),
+        ('SPEECHES', '演讲'),
+        ('SOUNDTRACKS', '原声带'),
         ('VIDEO', '视频'),
-        ('MOVIES', '影片'),
+        ('MOVIES', '电影'),
+        ('DOCUMENTARIES', '记录片'),
+        ('TV_SHOWS', '电视剧'),
+        ('SHORTS', '短片'),
         ('OTHER', '其他资源')
     )
 
@@ -130,31 +139,59 @@ class BaseUniqueFile(models.Model):
     def __str__(self):
         return f'{self.name}({human_readable_size(self.file_size)})'
 
+    @classmethod
+    @abstractmethod
+    def get_resource_type_codes(cls):
+        pass
+
+    @classmethod
+    def get_resource_type_choices(cls):
+        allowed_codes = cls.get_resource_type_codes()
+        return [(code, label) for code, label in cls.RESOURCE_TYPE_CHOICES if code in allowed_codes]
+
 
 class TextUniqueFile(BaseUniqueFile):
-    pass
+    @classmethod
+    def get_resource_type_codes(cls):
+        return ['BOOKS', 'PERIODICALS', 'MANUALS', 'EDUCATIONAL_MATERIALS', 'REPORTS', 'PROMOTIONS', 'ONLINE_CONTENT',
+                'SLIDES', 'NOTES', 'CODE', 'OTHER']
 
 
 class ImageUniqueFile(BaseUniqueFile):
-    pass
+    @classmethod
+    def get_resource_type_codes(cls):
+        return ['PHOTOS', 'IMAGES', 'OTHER']
 
 
 class AudioUniqueFile(BaseUniqueFile):
-    pass
+    @classmethod
+    def get_resource_type_codes(cls):
+        return ['AUDIO', 'AUDIOBOOKS', 'MUSIC', 'PODCASTS', 'BROADCASTS', 'SPEECHES', 'SOUNDTRACKS', 'OTHER']
 
 
 class VideoUniqueFile(BaseUniqueFile):
-    pass
+    @classmethod
+    def get_resource_type_codes(cls):
+        return ['VIDEO', 'MOVIES', 'DOCUMENTARIES', 'TV_SHOWS', 'SHORTS', 'OTHER']
 
 
 class PDFUniqueFile(BaseUniqueFile):
-    pass
+    @classmethod
+    def get_resource_type_codes(cls):
+        return ['BOOKS', 'PERIODICALS', 'MANUALS', 'EDUCATIONAL_MATERIALS', 'REPORTS', 'PROMOTIONS', 'ONLINE_CONTENT',
+                'SLIDES', 'NOTES', 'CODE', 'OTHER']
 
 
 class EBookUniqueFile(BaseUniqueFile):
-    pass
+    @classmethod
+    def get_resource_type_codes(cls):
+        return ['BOOKS', 'PERIODICALS', 'MANUALS', 'EDUCATIONAL_MATERIALS', 'REPORTS', 'PROMOTIONS', 'ONLINE_CONTENT',
+                'SLIDES', 'NOTES', 'CODE', 'OTHER']
 
 
 class DocUniqueFile(BaseUniqueFile):
-    pass
+    @classmethod
+    def get_resource_type_codes(cls):
+        return ['BOOKS', 'PERIODICALS', 'MANUALS', 'EDUCATIONAL_MATERIALS', 'REPORTS', 'PROMOTIONS', 'ONLINE_CONTENT',
+                'SPREADSHEETS', 'SLIDES', 'NOTES', 'CODE', 'OTHER']
 

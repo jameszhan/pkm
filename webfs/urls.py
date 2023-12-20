@@ -10,7 +10,8 @@ urlpatterns = [
     path('pdfs/resources/<str:resource_type>', views.pdf_files_by_resource_type, name="pdf_files_by_resource_type"),
     path('duplicates/pdfs', views.duplicates_pdf_files, name="duplicates_pdf_files"),
     path('duplicates/pdfs/<str:status>', views.duplicates_pdf_files, name="duplicates_pdf_files_by_status"),
-    path('use-cloudflare', views.use_cloudflare, name="use_cloudflare"),
+    path('not-use-cdn', views.not_use_cdn, name="not_use_cdn"),
+    path('videos/resources/<str:resource_type>', views.video_files_by_resource_type, name="video_files_by_resource_type"),
 ]
 
 

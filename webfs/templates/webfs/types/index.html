@@ -12,12 +12,9 @@
             {% if value|lower == resource_type %}
                 <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">{{ label }}</a></li>
             {% else %}
-                <li class="nav-item"><a class="nav-link" aria-current="page" href="{% url 'webfs:pdf_files_by_resource_type' value|lower %}">{{ label }}</a></li>
+                <li class="nav-item"><a class="nav-link" aria-current="page" href="{% url current_url_name value|lower %}">{{ label }}</a></li>
             {% endif %}
         {% endfor %}
-        <!-- li class="nav-item form-check form-switch">
-            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
-        </li -->
     </ul>
     <div class="row g-5">
         <div class="col-md-9">
@@ -25,7 +22,7 @@
                 <ul class="list-inline mt-2">
                     {% for tag in tagged_tags %}
                     <li class="list-inline-item tag">
-                        <a href="{% url 'webfs:pdf_files_by_resource_type' resource_type %}?{% for tag2 in tagged_tags %}{% if tag.slug != tag2.slug %}{% if not forloop.first %}&{% endif %}tag={{ tag2.slug }}{% endif %}{% endfor %}">
+                        <a href="{% url current_url_name resource_type %}?{% for tag2 in tagged_tags %}{% if tag.slug != tag2.slug %}{% if not forloop.first %}&{% endif %}tag={{ tag2.slug }}{% endif %}{% endfor %}">
                             <i class="bi-tag"></i>{{ tag.name }}<span>x</span>
                         </a>
                     </li>
@@ -33,22 +30,22 @@
                 </ul>
                 {% if date_filters.year and date_filters.month %}
                     <ul class="list-inline mt-2">
-                        <li class="list-inline-item date-filter"><a href="{% url 'webfs:pdf_files_by_resource_type' resource_type %}?year={{ date_filters.year }}"><i class="bi-chevron-left"></i>{{ date_filters.year }}</a></li>
+                        <li class="list-inline-item date-filter"><a href="{% url current_url_name resource_type %}?year={{ date_filters.year }}"><i class="bi-chevron-left"></i>{{ date_filters.year }}</a></li>
                         {% for day in date_filters.days %}
                         <li class="list-inline-item date-filter"><a href="?year={{ date_filters.year }}&month={{ date_filters.month }}&day={{ day.day }}">{{ day.month|zfill:2 }}月{{ day.day|zfill:2 }}日</a></li>
                         {% endfor %}
                     </ul>
                 {% elif date_filters.year %}
                     <ul class="list-inline mt-2">
-                        <li class="list-inline-item date-filter"><a href="{% url 'webfs:pdf_files_by_resource_type' resource_type %}">&nbsp;<i class="bi-chevron-left"></i>所有日期</a></li>
+                        <li class="list-inline-item date-filter"><a href="{% url current_url_name resource_type %}">&nbsp;<i class="bi-chevron-left"></i>所有日期</a></li>
                         {% for month in date_filters.months %}
-                        <li class="list-inline-item date-filter"><a href="{% url 'webfs:pdf_files_by_resource_type' resource_type %}?year={{ month.year }}&month={{ month.month }}">{{ month.year }}年{{ month.month|zfill:2 }}月</a></li>
+                        <li class="list-inline-item date-filter"><a href="{% url current_url_name resource_type %}?year={{ month.year }}&month={{ month.month }}">{{ month.year }}年{{ month.month|zfill:2 }}月</a></li>
                         {% endfor %}
                     </ul>
                 {% else %}
                     <ul class="list-inline mt-2">
                         {% for year in date_filters.years %}
-                        <li class="list-inline-item date-filter"><a href="{% url 'webfs:pdf_files_by_resource_type' resource_type %}?year={{ year.year }}">{{ year.year }}</a></li>
+                        <li class="list-inline-item date-filter"><a href="{% url current_url_name resource_type %}?year={{ year.year }}">{{ year.year }}</a></li>
                         {% endfor %}
                     </ul>
                 {% endif %}
@@ -65,10 +62,10 @@
                         <th style="width: 80px">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">存储状态</a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{% url 'webfs:pdf_files_by_resource_type' resource_type %}">所有状态</a></li>
+                                <li><a class="dropdown-item" href="{% url current_url_name resource_type %}">所有状态</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 {% for v, l in storage_statuses %}
-                                    <li><a class="dropdown-item" href="{% url 'webfs:pdf_files_by_path_cond' resource_type v|lower %}">{{ l }}</a></li>
+                                    <li><a class="dropdown-item" href="{% url current_url_name resource_type %}?storage_status={{ v|lower }}">{{ l }}</a></li>
                                 {% endfor %}
                             </ul>
                         </th>
@@ -138,7 +135,7 @@
                     <ul class="list-inline mt-2">
                     {% for tag in tags %}
                     <li class="list-inline-item tag">
-                        <a href="{% url 'webfs:pdf_files_by_resource_type' resource_type %}?tag={{ tag.slug }}">
+                        <a href="{% url current_url_name resource_type %}?tag={{ tag.slug }}">
                             {{ tag.name }}
                             <span>{{ tag.file_count }}</span>
                         </a>

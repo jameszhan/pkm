@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
@@ -6,57 +5,13 @@ from django.core.paginator import Paginator
 from django.db.models import Count, Q, Max, Subquery, OuterRef
 from django.shortcuts import render
 from django.urls import reverse
-from .models import Series, FileTag, PDFUniqueFile, ManagedFile
-from .services import search_files
-
-
-def get_file_server(request):
-    flag = request.COOKIES.get('useCloudflare')
-    if flag:
-        return settings.CDN_SERVER
-    else:
-        return settings.FILE_SERVER
-
-
-def date_hierarchy(model, year=None, month=None, day=None):
-    date_filters = {
-        'year': year,
-        'month': month,
-        'day': day,
-    }
-
-    if year and month:
-        date_filters['days'] = model.objects.filter(created_time__year=year, created_time__month=month).dates('created_time', 'day')
-    elif year:
-        date_filters['months'] = model.objects.filter(created_time__year=year).dates('created_time', 'month')
-    else:
-        date_filters['years'] = model.objects.dates('created_time', 'year')
-
-    return date_filters
-
-
-def date_hierarchy2(queryset, year=None, month=None, day=None):
-    date_filters = {
-        'year': year,
-        'month': month,
-        'day': day,
-    }
-
-    if year and month:
-        date_filters['days'] = queryset.filter(created_time__year=year,
-                                               created_time__month=month).dates('created_time', 'day')
-    elif year:
-        date_filters['months'] = queryset.filter(created_time__year=year).dates('created_time', 'month')
-    else:
-        date_filters['years'] = queryset.dates('created_time', 'year')
-
-    return date_filters
+from .models import Series, FileTag, PDFUniqueFile, VideoUniqueFile, ManagedFile
+from .viewhelpers import get_file_server, date_hierarchy, files_by_resource_type
 
 
 @login_required
 def pdf_files(request, series_slug=None):
-    files = (PDFUniqueFile.objects.prefetch_related('managed_files').prefetch_related('tags').all()
-             .order_by('name'))
+    files = PDFUniqueFile.objects.prefetch_related('managed_files').prefetch_related('tags').all().order_by('name')
 
     q = request.GET.get('q', None)
     if q:
@@ -98,7 +53,7 @@ def pdf_files(request, series_slug=None):
         'files': files,
         'tags': tags,
         'series_list': series_list,
-        'date_filters': date_hierarchy(PDFUniqueFile, year, month, day),
+        'date_filters': date_hierarchy(PDFUniqueFile.objects, year, month, day),
         'file_server': get_file_server(request),
         'index_url': reverse('webfs:pdf_files'),
     })
@@ -106,30 +61,12 @@ def pdf_files(request, series_slug=None):
 
 @login_required
 def pdf_files_by_resource_type(request, resource_type):
-    q = request.GET.get('q', None)
-    s = request.GET.get('status', None)
-    ss = request.GET.get('storage_status', None)
-    year = request.GET.get('year')
-    month = request.GET.get('month')
-    day = request.GET.get('day')
-    tag_slugs = request.GET.getlist('tag')
+    return files_by_resource_type(PDFUniqueFile, request, resource_type, 'webfs:pdf_files_by_resource_type')
 
-    files, date_filters, tags, tagged_tags = search_files(PDFUniqueFile, resource_type, s, ss, tag_slugs, q, year, month, day)
-    paginator = Paginator(files, 100)
-    page_number = request.GET.get('page', 1)
-    files = paginator.get_page(page_number)
 
-    return render(request, 'webfs/pdfs/index.html', {
-        'files': files,
-        'date_filters': date_filters,
-        'tags': tags,
-        'tagged_tags': tagged_tags,
-        'resource_type': resource_type,
-        'storage_status': ss,
-        'resource_types': PDFUniqueFile.RESOURCE_TYPE_CHOICES,
-        'storage_statuses': PDFUniqueFile.STORAGE_STATUS_CHOICES,
-        'file_server': get_file_server(request),
-    })
+@login_required
+def video_files_by_resource_type(request, resource_type):
+    return files_by_resource_type(VideoUniqueFile, request, resource_type, 'webfs:video_files_by_resource_type')
 
 
 @login_required
@@ -174,11 +111,11 @@ def file_list(request):
     })
 
 
-def use_cloudflare(request):
+def not_use_cdn(request):
     response = JsonResponse({"op": "set_cookie"})
-    enabled = request.GET.get('enabled', None)
+    enabled = request.GET.get('flag', None)
     if enabled:
-        response.set_cookie('useCloudflare', '1')
+        response.set_cookie('notUseCDN', '0')
     else:
-        response.delete_cookie('useCloudflare')
+        response.delete_cookie('notUseCDN')
     return response

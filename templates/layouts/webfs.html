@@ -120,18 +120,25 @@
         <div class="collapse navbar-collapse" id="navContent">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item"><a class="nav-link" href="{% url 'webfs:file_list' %}">原始文件</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'webfs:pdf_files' %}">PDF文件</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'webfs:pdf_files_by_resource_type' 'books' %}">PDF文件分类</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'webfs:duplicates_pdf_files' %}">重复检测</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="{% url 'webfs:pdf_files' %}" id="pdfFiles" role="button" data-bs-toggle="dropdown" aria-expanded="false">PDF文件</a>
+                    <ul class="dropdown-menu" aria-labelledby="pdfFiles">
+                        <li><a class="dropdown-item" href="{% url 'webfs:pdf_files_by_resource_type' 'books' %}">PDF文件分类</a></li>
+                        <li><a class="dropdown-item" href="{% url 'webfs:pdf_files' %}">PDF文件</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'webfs:duplicates_pdf_files' %}">重复检测</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'webfs:video_files_by_resource_type' 'books' %}">视频文件</a></li>
                 <li class="nav-item"><a class="nav-link" href="/admin">管理后台</a></li>
                 <li class="nav-item">
                     <a class="nav-link" href="javascript:void(0);">关于</a>
                 </li>
             </ul>
             <div class="form-check form-switch">
-              <input class="form-check-input" name="use_cloudflare" type="checkbox" data-url="{% url 'webfs:use_cloudflare' %}"
-                     {% if request.COOKIES.useCloudflare %}checked{% endif %} title="Use Cloudflare"
-                     id="useCloudflare" aria-label="useCloudflare" />
+              <input class="form-check-input" name="use_cloudflare" type="checkbox" data-url="{% url 'webfs:not_use_cdn' %}"
+                     {% if request.COOKIES.notUseCDN %}checked{% endif %} title="Not Use CDN"
+                     id="notUseCDN" aria-label="notUseCDN" />
             </div>
             <form class="d-flex" action="{{ index_url }}">
                 <input class="form-control me-2" type="search" name="q" placeholder="" aria-label="Search">
@@ -157,11 +164,11 @@
         integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0="
         crossorigin="anonymous"></script>
 <script>
-    $(document).on('change', '#useCloudflare', function (e) {
+    $(document).on('change', '#notUseCDN', function (e) {
         e.preventDefault();
         let url = $(this).data('url');
         if (this.checked) {
-            url += '?enabled=1'
+            url += '?flag=1'
         }
         $.get(url).done(function (r, status, jqXHR) {
             console.log(r);
