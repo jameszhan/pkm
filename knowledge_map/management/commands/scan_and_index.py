@@ -262,7 +262,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('--directories', type=str, help="directories.md file")
         parser.add_argument('--keep-origin-file', type=bool, help="Keep Origin File")
-        parser.add_argument('--force-link', action='store_true', help="Force link for existing managed files")
+        parser.add_argument('--force-link', type=bool, help="Force link for existing managed files")
 
     def handle(self, *args, **kwargs):
         directories_file = kwargs['directories']
