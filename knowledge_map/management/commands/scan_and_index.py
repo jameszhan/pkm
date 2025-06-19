@@ -77,7 +77,7 @@ def get_pdf_metadata(filepath):
         return pdf_document.metadata
 
 
-def process_common_file(foldername, filename, basename, root_dir, prefix, ext, keep_origin_file):
+def process_common_file(foldername, filename, basename, root_dir, prefix, ext, keep_origin_file, force_link=False):
     catfolders = {
         ".ppt": "ppts",
         ".pps": "ppts",
@@ -105,7 +105,7 @@ def process_common_file(foldername, filename, basename, root_dir, prefix, ext, k
 
     filepath = os.path.join(foldername, filename)
     sanitized_path = filepath.replace(root_dir, prefix)
-    managed_file = ManagedFile.objects.filter(original_path=sanitized_path).first()
+    managed_file = ManagedFile.objects.select_related('unique_file').filter(original_path=sanitized_path).first()
     if managed_file is not None:
         digest = sha256(filepath)
         if digest == managed_file.unique_file_id:
@@ -114,18 +114,20 @@ def process_common_file(foldername, filename, basename, root_dir, prefix, ext, k
                 os.remove(filepath)
         else:
             print(f'[ERROR] {filepath}({sanitized_path}) have already exists, but not consistent')
-        return
+
+        if not force_link:
+            return
 
     content_type, _ = mimetypes.guess_type(filepath)
     if ext in FALLBACK_MIMES:
         content_type = FALLBACK_MIMES[ext]
     if content_type:
-        do_save_fileinfo(content_type, filepath, basename, ext, catfolders[ext], sanitized_path, '{}', keep_origin_file)
+        do_save_fileinfo(content_type, filepath, basename, ext, catfolders[ext], sanitized_path, '{}', keep_origin_file, force_link)
     else:
         print(f'{filepath} can`t guess type, ext is {ext}')
 
 
-def process_pdf_file(foldername, filename, basename, root_dir, prefix, ext, keep_origin_file):
+def process_pdf_file(foldername, filename, basename, root_dir, prefix, ext, keep_origin_file, force_link=False):
     filepath = os.path.join(foldername, filename)
     sanitized_path = filepath.replace(root_dir, prefix)
     managed_file = ManagedFile.objects.select_related('unique_file').filter(original_path=sanitized_path).first()
@@ -137,15 +139,17 @@ def process_pdf_file(foldername, filename, basename, root_dir, prefix, ext, keep
                 os.remove(filepath)
         else:
             print(f'[ERROR] {filepath}({managed_file.unique_file.file_size}-{os.stat(filepath).st_size}) have already exists, but not consistent')
-        return
+
+        if not force_link:
+            return
 
     content_type, _ = mimetypes.guess_type(filepath)
     if content_type:
         metadata = get_pdf_metadata(filepath)
-        do_save_fileinfo(content_type, filepath, basename, ext, 'pdfs', sanitized_path, metadata, keep_origin_file)
+        do_save_fileinfo(content_type, filepath, basename, ext, 'pdfs', sanitized_path, metadata, keep_origin_file, force_link)
 
 
-def do_save_fileinfo(mimetype, filepath, basename, ext, catfolder, sanitized_path, metadata, keep_origin_file=False):
+def do_save_fileinfo(mimetype, filepath, basename, ext, catfolder, sanitized_path, metadata, keep_origin_file=False, force_link=False):
     with transaction.atomic():
         created_time, modified_time, accessed_time, file_size, src_inode = get_file_stats(filepath)
         digest = sha256(filepath)
@@ -199,12 +203,33 @@ def do_save_fileinfo(mimetype, filepath, basename, ext, catfolder, sanitized_pat
                 os.remove(filepath)
                 print(f'remove file {sanitized_path} successful')
 
-        managed_file = ManagedFile.objects.create(
-            original_path=sanitized_path,
-            file_type=ext,
-            unique_file=unique_file,
-        )
-        print(f'add managed file {managed_file.original_path} success')
+        if force_link:
+            try:
+                managed_file, created = ManagedFile.objects.get_or_create(
+                    original_path=sanitized_path,
+                    defaults={
+                        'file_type': ext,
+                        'unique_file': unique_file,
+                    }
+                )
+                if created:
+                    print(f'add managed file {managed_file.original_path} success')
+                else:
+                    print(f'managed file {managed_file.original_path} already exists')
+                    if managed_file.unique_file != unique_file:
+                        managed_file.unique_file = unique_file
+                        managed_file.save(update_fields=['unique_file'])
+                        print(f'updated managed file {managed_file.original_path} unique_file reference')
+            except Exception as e:
+                print(f'[ERROR] Failed to create/update managed file {sanitized_path}: {e}')
+                raise
+        else:
+            managed_file = ManagedFile.objects.create(
+                original_path=sanitized_path,
+                file_type=ext,
+                unique_file=unique_file,
+            )
+            print(f'add managed file {managed_file.original_path} success')
 
 
 # python3 manage.py scan_and_index --directories data/rootfs/directories.md
@@ -237,6 +262,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('--directories', type=str, help="directories.md file")
         parser.add_argument('--keep-origin-file', type=bool, help="Keep Origin File")
+        parser.add_argument('--force-link', action='store_true', help="Force link for existing managed files")
 
     def handle(self, *args, **kwargs):
         directories_file = kwargs['directories']
@@ -245,6 +271,7 @@ class Command(BaseCommand):
             return
 
         keep_origin_file = kwargs['keep_origin_file']
+        force_link = kwargs['force_link']
 
         directories = {}
         with open(directories_file, 'r', encoding='UTF-8') as f:
@@ -264,13 +291,10 @@ class Command(BaseCommand):
                     basename, ext = os.path.splitext(filename)
                     if ext in self.processors:
                         try:
-                            self.processors[ext](foldername, filename, basename, root_dir, prefix, ext, keep_origin_file)
+                            self.processors[ext](foldername, filename, basename, root_dir, prefix, ext, keep_origin_file, force_link)
                         except (RuntimeError, ValueError):
                             err_msg = f'can`t process {filepath}({os.stat(filepath).st_size}), error: {traceback.format_exc()}'
                             self.stdout.write(self.style.ERROR(err_msg))
                     # else:
                     #     if filename.endswith("djvu"):
                     #         self.stdout.write(self.style.WARNING(f'{ext} not support, filepath: {filepath}'))
-
-
-
